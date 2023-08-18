@@ -8,17 +8,14 @@ import { useAuth } from "@/app/Provider/AuthProvider";
 import { useRouter } from "next/router";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
   const { login } = useAuth();
   const { notifySuccess, notifyError } = useNotify();
   const router = useRouter();
 
   return (
-    <div className="bg-grey-light flex min-h-screen items-center justify-center">
+    <div className="flex min-h-screen items-center justify-center bg-grey-light">
       <div className="w-96 rounded-lg bg-white p-8 shadow-md">
-        <h2 className="text-blue-default mb-4 text-center text-2xl font-bold">
+        <h2 className="mb-4 text-center text-2xl font-bold text-blue-default">
           Login
         </h2>
         <Formik

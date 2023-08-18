@@ -1,7 +1,7 @@
 {
-  "name": "server",
+  "name": "forensic-server",
   "description": "",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "homepage": "",
   "private": true,
   "keywords": [
@@ -60,13 +60,16 @@
     "@feathersjs/socketio": "^5.0.8",
     "@feathersjs/transport-commons": "^5.0.8",
     "@feathersjs/typebox": "^5.0.8",
+    "feathers-hooks-common": "^8.0.0",
     "knex": "^2.5.1",
+    "lodash": "^4.17.21",
     "pg": "^8.11.1",
     "winston": "^3.10.0"
   },
   "devDependencies": {
     "@feathersjs/cli": "5.0.8",
     "@feathersjs/rest-client": "^5.0.8",
+    "@types/lodash": "^4.14.197",
     "@types/mocha": "^10.0.1",
     "@types/node": "^20.4.2",
     "axios": "^1.4.0",

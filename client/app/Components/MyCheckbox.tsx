@@ -1,7 +1,6 @@
 import { useField } from "formik";
 
 interface IMyCheckbox {
-  label: string;
   name: string;
   children: React.ReactNode;
   [x: string]: any;
@@ -10,18 +9,22 @@ interface IMyCheckbox {
 const MyCheckbox = ({ children, ...props }: IMyCheckbox) => {
   const [field, meta] = useField({ ...props, type: "checkbox" });
   return (
-    <div className="flex items-center">
-      <label className="checkbox-input text-grey-dark mr-2">
-        <input
-          type="checkbox"
-          className="form-checkbox text-blue-default border-grey-dark bg-grey-lightest"
-          {...field}
-          {...props}
-        />
+    <div className="my-2 flex items-center">
+      <input
+        type="checkbox"
+        id={props.id || props.name}
+        className="form-checkbox border-grey-dark bg-grey-lightest text-blue-default"
+        {...field}
+        {...props}
+      />
+      <label
+        htmlFor={props.id || props.name}
+        className="checkbox-input ml-2 cursor-pointer  text-grey-dark"
+      >
         {children}
       </label>
       {meta.touched && meta.error ? (
-        <div className="error text-red-default mt-2">{meta.error}</div>
+        <div className="error mt-2 text-red-default">{meta.error}</div>
       ) : null}
     </div>
   );

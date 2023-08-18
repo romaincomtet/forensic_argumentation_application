@@ -4,6 +4,36 @@ import type { TransportConnection, Application } from '@feathersjs/feathers'
 import authenticationClient from '@feathersjs/authentication-client'
 import type { AuthenticationClientOptions } from '@feathersjs/authentication-client'
 
+import { permissionsClient } from './services/permissions/permissions.shared'
+export type {
+  Permissions,
+  PermissionsData,
+  PermissionsQuery,
+  PermissionsPatch
+} from './services/permissions/permissions.shared'
+
+import { teamMembersClient } from './services/team-members/team-members.shared'
+export type {
+  TeamMembers,
+  TeamMembersData,
+  TeamMembersQuery,
+  TeamMembersPatch
+} from './services/team-members/team-members.shared'
+
+import { teamsClient } from './services/teams/teams.shared'
+export type { Teams, TeamsData, TeamsQuery, TeamsPatch } from './services/teams/teams.shared'
+
+import { invitationsClient } from './services/invitations/invitations.shared'
+export type {
+  Invitations,
+  InvitationsData,
+  InvitationsQuery,
+  InvitationsPatch
+} from './services/invitations/invitations.shared'
+
+import { casesClient } from './services/cases/cases.shared'
+export type { Cases, CasesData, CasesQuery, CasesPatch } from './services/cases/cases.shared'
+
 import { userClient } from './services/users/users.shared'
 export type { User, UserData, UserQuery, UserPatch } from './services/users/users.shared'
 
@@ -34,5 +64,10 @@ export const createClient = <Configuration = any,>(
   client.set('connection', connection)
 
   client.configure(userClient)
+  client.configure(casesClient)
+  client.configure(invitationsClient)
+  client.configure(teamsClient)
+  client.configure(teamMembersClient)
+  client.configure(permissionsClient)
   return client
 }

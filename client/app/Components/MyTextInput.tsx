@@ -12,19 +12,20 @@ const MyTextInput = ({ label, ...props }: IMyTextInput) => {
     <>
       <label
         htmlFor={props.id || props.name}
-        className="text-grey-dark my-2 block"
+        className="my-2 block cursor-pointer text-grey-dark"
       >
         {label}
       </label>
       <input
-        className={`border-grey-dark bg-grey-lightest focus:border-blue-default w-full rounded-md border px-4 py-2 focus:outline-none ${
+        className={`w-full rounded-md border border-grey-dark bg-grey-lightest px-4 py-2 focus:border-blue-default focus:outline-none ${
           meta.touched && meta.error ? "border-red-default" : ""
         }`}
+        id={props.id || props.name}
         {...field}
         {...props}
       />
       {meta.touched && meta.error ? (
-        <div className="error text-red-default my-1">{meta.error}</div>
+        <div className="error my-1 text-red-default">{meta.error}</div>
       ) : null}
     </>
   );

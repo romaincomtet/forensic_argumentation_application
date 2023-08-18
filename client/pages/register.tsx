@@ -70,7 +70,7 @@ export default function Register() {
           }}
         >
           <Form>
-            <MyTextInput label="name" name="name" type="text" />
+            <MyTextInput label="Name" name="name" type="text" />
             <MyTextInput label="Email" name="email" type="email" />
             <MyTextInput label="Password" name="password" type="password" />
             <MyCheckbox name="isOrganisationUser">

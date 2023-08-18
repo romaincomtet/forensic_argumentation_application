@@ -12,19 +12,20 @@ const MySelect = ({ label, ...props }: IMySelect) => {
     <div>
       <label
         htmlFor={props.id || props.name}
-        className="text-grey-dark mb-2 block"
+        className="mb-2 block cursor-pointer text-grey-dark "
       >
         {label}
       </label>
       <select
-        className={`border-grey-dark bg-grey-lightest focus:border-blue-default w-full rounded-md border px-4 py-2 focus:outline-none ${
+        id={props.id || props.name}
+        className={`w-full rounded-md border border-grey-dark bg-grey-lightest px-4 py-2 focus:border-blue-default focus:outline-none ${
           meta.touched && meta.error ? "border-red-default" : ""
         }`}
         {...field}
         {...props}
       />
       {meta.touched && meta.error ? (
-        <div className="error text-red-default mt-2">{meta.error}</div>
+        <div className="error mt-2 text-red-default">{meta.error}</div>
       ) : null}
     </div>
   );

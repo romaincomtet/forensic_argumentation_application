@@ -6,7 +6,10 @@ export async function up(knex: Knex): Promise<void> {
     table.increments('id')
 
     table.string('email').unique()
-    table.string('password')
+    table.string('password').notNullable()
+    table.string('name').notNullable()
+    table.boolean('isOrganisationUser').defaultTo(false)
+    table.timestamp('created_at').defaultTo(knex.fn.now())
   })
 }
 

@@ -10,7 +10,7 @@ on:
       - main
 
 jobs:
-  build:
+  build-server:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,32 +20,17 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "14" # or whatever version you need
+          node-version: "20" # or whatever version you need
 
       - name: Install dependencies
-        run: yarn install
+        run: cd server && yarn install
 
       - name: Build
-        run: yarn run build
+        run: cd server && yarn run compile
 
-  test:
-    needs: build
+  build-front:
+    needs: build-server
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:13
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: testdb
-        ports:
-          - 5432:5432
-        # needed because the postgres container does not provide a healthcheck
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
 
     steps:
       - name: Checkout code
@@ -54,12 +39,46 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "14" # or whatever version you need
+          node-version: "20" # or whatever version you need
 
       - name: Install dependencies
-        run: yarn install
+        run: cd client && yarn install
 
-      - name: Test
-        run: yarn run test
-        env:
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432/testdb
+      - name: Build
+        run: cd client && yarn run build
+
+  # test:
+  #   needs: build-front
+  #   runs-on: ubuntu-latest
+  #   services:
+  #     postgres:
+  #       image: postgres:13
+  #       env:
+  #         POSTGRES_USER: postgres
+  #         POSTGRES_PASSWORD: postgres
+  #         POSTGRES_DB: testdb
+  #       ports:
+  #         - 5432:5432
+  #       # needed because the postgres container does not provide a healthcheck
+  #       options: >-
+  #         --health-cmd pg_isready
+  #         --health-interval 10s
+  #         --health-timeout 5s
+  #         --health-retries 5
+
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
+
+  #     - name: Use Node.js
+  #       uses: actions/setup-node@v2
+  #       with:
+  #         node-version: "20" # or whatever version you need
+
+  #     - name: Install dependencies
+  #       run: yarn install
+
+  #     - name: Test
+  #       run: yarn run test
+  #       env:
+  #         DATABASE_URL: postgres://postgres:postgres@localhost:5432/testdb

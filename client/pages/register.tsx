@@ -8,6 +8,7 @@ import { useAuth } from "@/app/Provider/AuthProvider";
 import { useRouter } from "next/router";
 import MyCheckbox from "@/app/Components/MyCheckbox";
 import FClient from "@/app/Api/FeathersClient";
+import Link from "next/link";
 
 export default function Register() {
   const { notifySuccess, notifyError } = useNotify();
@@ -76,7 +77,16 @@ export default function Register() {
             <MyCheckbox name="isOrganisationUser">
               Etes vous un manager de case
             </MyCheckbox>
-            <Button type="submit">Register</Button>
+            <p className="mb-4 mt-3 text-sm text-grey-dark">
+              If you already have an account,{" "}
+              <Link href="/" className="text-blue-default hover:underline">
+                login here
+              </Link>
+              .
+            </p>
+            <Button className="mt-5" type="submit">
+              Register
+            </Button>
           </Form>
         </Formik>
       </div>

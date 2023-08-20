@@ -7,7 +7,7 @@ interface IButtonProps {
 const Button = ({ children, className, ...props }: IButtonProps) => {
   return (
     <button
-      className="bg-blue-default hover:bg-blue-dark focus:bg-blue-dark mt-5 w-full rounded-md px-4 py-2 text-white focus:outline-none"
+      className={`rounded-md bg-blue-default  px-4 py-2 text-white hover:bg-blue-dark focus:bg-blue-dark focus:outline-none ${className}`}
       {...props}
     >
       {children}

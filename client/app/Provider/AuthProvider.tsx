@@ -1,5 +1,7 @@
 import { createContext, useContext, ReactNode } from "react";
-
+import { useState, FC } from "react";
+import FClient from "../Api/FeathersClient";
+import { User } from "forensic-server";
 // Define the functions for our context
 interface IAuthFunctions {
   login: (email: string, password: string) => Promise<boolean>;
@@ -20,10 +22,6 @@ interface IAuthContextType extends IAuthFunctions {
 export const AuthContext = createContext<IAuthContextType | undefined>(
   undefined,
 );
-
-import { useState, FC } from "react";
-import FClient from "../Api/FeathersClient";
-import { User } from "forensic-server";
 
 export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   // Separate state variables for our context
@@ -55,7 +53,10 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   };
 
   const logout = () => {
-    // Implement logout logic here
+    // @ts-ignore
+    FClient.logout();
+    setLogged(false);
+    setUser(null);
   };
 
   const autoLogin = async () => {

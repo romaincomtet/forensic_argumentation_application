@@ -6,6 +6,7 @@ import MyTextInput from "@/app/Components/MyTextInput";
 import { useNotify } from "@/app/Provider/ToastProvider";
 import { useAuth } from "@/app/Provider/AuthProvider";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -44,8 +45,19 @@ export default function LoginPage() {
           <Form>
             <MyTextInput label="Email" name="email" type="email" />
             <MyTextInput label="Password" name="password" type="password" />
-
-            <Button type="submit">Login</Button>
+            <p className="mb-4 mt-3 text-sm text-grey-dark">
+              If you don&apos;t have an account,{" "}
+              <Link
+                href="/register"
+                className="text-blue-default hover:underline"
+              >
+                create one here
+              </Link>
+              .
+            </p>
+            <Button className="mt-5" type="submit">
+              Login
+            </Button>
           </Form>
         </Formik>
       </div>

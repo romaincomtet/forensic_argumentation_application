@@ -102,7 +102,13 @@ export const casesPatchResolver = resolve<Cases & CasesPatch, HookContext>({
 })
 
 // Schema for allowed query properties
-export const casesQueryProperties = Type.Pick(casesSchema, ['id'])
+export const casesQueryProperties = Type.Pick(casesSchema, [
+  'id',
+  'organisationName',
+  'caseName',
+  'caseNumber',
+  'updatedAt'
+])
 export const casesQuerySchema = Type.Intersect(
   [
     querySyntax(casesQueryProperties),

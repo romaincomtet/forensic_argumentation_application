@@ -17,9 +17,12 @@ import {
 import type { Application } from '../../declarations'
 import { UserService, getOptions } from './users.class'
 import { userPath, userMethods } from './users.shared'
+import { authorize } from 'feathers-casl'
+import { iff } from 'feathers-hooks-common'
 
 export * from './users.class'
 export * from './users.schema'
+const authorizeHook = authorize({ adapter: '@feathersjs/mongodb' })
 
 // A configure function that registers the service and its hooks via `app.configure`
 export const user = (app: Application) => {
@@ -43,11 +46,16 @@ export const user = (app: Application) => {
     },
     before: {
       all: [schemaHooks.validateQuery(userQueryValidator), schemaHooks.resolveQuery(userQueryResolver)],
-      find: [],
-      get: [],
+
+      find: [iff(async (context) => context.params.ability, authorizeHook)],
+      get: [iff(async (context) => context.params.ability, authorizeHook)],
       create: [schemaHooks.validateData(userDataValidator), schemaHooks.resolveData(userDataResolver)],
-      patch: [schemaHooks.validateData(userPatchValidator), schemaHooks.resolveData(userPatchResolver)],
-      remove: []
+      patch: [
+        authorizeHook,
+        schemaHooks.validateData(userPatchValidator),
+        schemaHooks.resolveData(userPatchResolver)
+      ],
+      remove: [authorizeHook]
     },
     after: {
       all: []

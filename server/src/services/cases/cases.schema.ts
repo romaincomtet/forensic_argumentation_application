@@ -107,7 +107,9 @@ export const casesQueryProperties = Type.Pick(casesSchema, [
   'organisationName',
   'caseName',
   'caseNumber',
-  'updatedAt'
+  'updatedAt',
+  'organisationUserId',
+  'managerUserId'
 ])
 export const casesQuerySchema = Type.Intersect(
   [

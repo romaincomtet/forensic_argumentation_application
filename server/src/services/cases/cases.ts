@@ -18,9 +18,11 @@ import type { Application } from '../../declarations'
 import { CasesService, getOptions } from './cases.class'
 import { casesPath, casesMethods } from './cases.shared'
 import { pullRessource } from '../../hooks/pull-ressource'
+import { authorize } from 'feathers-casl'
 
 export * from './cases.class'
 export * from './cases.schema'
+const authorizeHook = authorize({ adapter: '@feathersjs/mongodb' })
 
 // A configure function that registers the service and its hooks via `app.configure`
 export const cases = (app: Application) => {
@@ -41,7 +43,11 @@ export const cases = (app: Application) => {
       ]
     },
     before: {
-      all: [schemaHooks.validateQuery(casesQueryValidator), schemaHooks.resolveQuery(casesQueryResolver)],
+      all: [
+        authorizeHook,
+        schemaHooks.validateQuery(casesQueryValidator),
+        schemaHooks.resolveQuery(casesQueryResolver)
+      ],
       find: [],
       get: [],
       create: [schemaHooks.validateData(casesDataValidator), schemaHooks.resolveData(casesDataResolver)],

@@ -18,9 +18,11 @@ import type { Application } from '../../declarations'
 import { TeamsService, getOptions } from './teams.class'
 import { teamsPath, teamsMethods } from './teams.shared'
 import { disallow } from 'feathers-hooks-common'
+import { authorize } from 'feathers-casl'
 
 export * from './teams.class'
 export * from './teams.schema'
+const authorizeHook = authorize({ adapter: '@feathersjs/mongodb' })
 
 // A configure function that registers the service and its hooks via `app.configure`
 export const teams = (app: Application) => {
@@ -41,7 +43,11 @@ export const teams = (app: Application) => {
       ]
     },
     before: {
-      all: [schemaHooks.validateQuery(teamsQueryValidator), schemaHooks.resolveQuery(teamsQueryResolver)],
+      all: [
+        authorizeHook,
+        schemaHooks.validateQuery(teamsQueryValidator),
+        schemaHooks.resolveQuery(teamsQueryResolver)
+      ],
       find: [],
       get: [],
       create: [schemaHooks.validateData(teamsDataValidator), schemaHooks.resolveData(teamsDataResolver)],

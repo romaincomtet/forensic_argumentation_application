@@ -17,9 +17,12 @@ import {
 import type { Application } from '../../declarations'
 import { PermissionsService, getOptions } from './permissions.class'
 import { permissionsPath, permissionsMethods } from './permissions.shared'
+import { authorize } from 'feathers-casl'
 
 export * from './permissions.class'
 export * from './permissions.schema'
+
+const authorizeHook = authorize({ adapter: '@feathersjs/mongodb' })
 
 // A configure function that registers the service and its hooks via `app.configure`
 export const permissions = (app: Application) => {
@@ -41,6 +44,7 @@ export const permissions = (app: Application) => {
     },
     before: {
       all: [
+        authorizeHook,
         schemaHooks.validateQuery(permissionsQueryValidator),
         schemaHooks.resolveQuery(permissionsQueryResolver)
       ],

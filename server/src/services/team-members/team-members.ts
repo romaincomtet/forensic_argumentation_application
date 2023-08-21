@@ -17,9 +17,12 @@ import {
 import type { Application } from '../../declarations'
 import { TeamMembersService, getOptions } from './team-members.class'
 import { teamMembersPath, teamMembersMethods } from './team-members.shared'
+import { authorize } from 'feathers-casl'
 
 export * from './team-members.class'
 export * from './team-members.schema'
+
+const authorizeHook = authorize({ adapter: '@feathersjs/mongodb' })
 
 // A configure function that registers the service and its hooks via `app.configure`
 export const teamMembers = (app: Application) => {
@@ -41,6 +44,7 @@ export const teamMembers = (app: Application) => {
     },
     before: {
       all: [
+        authorizeHook,
         schemaHooks.validateQuery(teamMembersQueryValidator),
         schemaHooks.resolveQuery(teamMembersQueryResolver)
       ],

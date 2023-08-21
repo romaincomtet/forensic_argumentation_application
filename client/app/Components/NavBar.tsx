@@ -41,7 +41,9 @@ const Navbar = ({ pageName }: INavbarProps) => {
       </div>
       <h1 className="text-3xl font-semibold text-grey-dark">{pageName}</h1>
       <div className="flex items-center space-x-4">
-        <p className="font-medium text-grey-dark">{user?.name}</p>
+        <Link href="/protect/profile" className="font-medium text-grey-dark">
+          {user?.name}
+        </Link>
         <div className="relative">
           <FontAwesomeIcon
             icon={faUser}

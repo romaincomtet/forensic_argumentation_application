@@ -19,9 +19,12 @@ import type { Application } from '../../declarations'
 import { InvitationsService, getOptions } from './invitations.class'
 import { invitationsPath, invitationsMethods } from './invitations.shared'
 import { disallow } from 'feathers-hooks-common'
+import { authorize } from 'feathers-casl'
 
 export * from './invitations.class'
 export * from './invitations.schema'
+
+const authorizeHook = authorize({ adapter: '@feathersjs/knex' })
 
 // A configure function that registers the service and its hooks via `app.configure`
 export const invitations = (app: Application) => {
@@ -43,6 +46,10 @@ export const invitations = (app: Application) => {
     },
     before: {
       all: [
+        async (context) => {
+          console.log(context.params)
+        },
+        authorizeHook,
         schemaHooks.validateQuery(invitationsQueryValidator),
         schemaHooks.resolveQuery(invitationsQueryResolver)
       ],

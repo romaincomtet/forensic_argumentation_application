@@ -79,7 +79,8 @@ export const invitationsQueryProperties = Type.Pick(invitationsSchema, [
   'userId',
   'caseId',
   'teamId',
-  'status'
+  'status',
+  'createdAt'
 ])
 export const invitationsQuerySchema = Type.Intersect(
   [

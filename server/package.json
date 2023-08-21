@@ -46,6 +46,7 @@
     "migrate:make": "knex migrate:make"
   },
   "dependencies": {
+    "@casl/ability": "^6.5.0",
     "@feathersjs/adapter-commons": "^5.0.8",
     "@feathersjs/authentication": "^5.0.8",
     "@feathersjs/authentication-client": "^5.0.8",
@@ -60,6 +61,7 @@
     "@feathersjs/socketio": "^5.0.8",
     "@feathersjs/transport-commons": "^5.0.8",
     "@feathersjs/typebox": "^5.0.8",
+    "feathers-casl": "^2.1.0",
     "feathers-hooks-common": "^8.0.0",
     "knex": "^2.5.1",
     "lodash": "^4.17.21",

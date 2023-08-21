@@ -1,12 +1,11 @@
 // // For more information about this file see https://dove.feathersjs.com/guides/cli/service.schemas.html
 import { resolve } from '@feathersjs/schema'
-import { Type, getValidator, querySyntax } from '@feathersjs/typebox'
+import { StringEnum, Type, getValidator, querySyntax } from '@feathersjs/typebox'
 import type { Static } from '@feathersjs/typebox'
 
 import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 import { BadRequest } from '@feathersjs/errors'
-import { userSchema } from '../users/users.schema'
 
 export const casesSchema = Type.Object(
   {
@@ -18,7 +17,11 @@ export const casesSchema = Type.Object(
     managerUserId: Type.Number(),
     teamId: Type.Number(),
     createdAt: Type.String({ format: 'date-time' }),
-    updatedAt: Type.String({ format: 'date-time' })
+    updatedAt: Type.String({ format: 'date-time' }),
+
+    invitation: Type.Optional(
+      Type.Object({ status: StringEnum(['pending', 'accepted', 'refused', 'canceled']) })
+    )
   },
   { $id: 'Cases', additionalProperties: false }
 )
@@ -27,7 +30,17 @@ export type Cases = Static<typeof casesSchema>
 export const casesValidator = getValidator(casesSchema, dataValidator)
 export const casesResolver = resolve<Cases, HookContext>({})
 
-export const casesExternalResolver = resolve<Cases, HookContext>({})
+export const casesExternalResolver = resolve<Cases, HookContext>({
+  invitation: async (value, row, context) => {
+    if (!row.managerUserId) {
+      const invitation = await context.app
+        .service('invitations')
+        ._find({ query: { caseId: row.id, teamId: null, $sort: { createdAt: -1 }, $limit: 1 } })
+      return invitation.data[0]
+    }
+    return undefined
+  }
+})
 
 // Schema for creating new entries
 export const casesDataSchema = Type.Intersect(
@@ -113,7 +126,11 @@ export const casesQueryProperties = Type.Pick(casesSchema, [
 ])
 export const casesQuerySchema = Type.Intersect(
   [
-    querySyntax(casesQueryProperties),
+    querySyntax(casesQueryProperties, {
+      caseName: {
+        $ilike: Type.String()
+      }
+    }),
     // Add additional query properties here
     Type.Object({}, { additionalProperties: false })
   ],

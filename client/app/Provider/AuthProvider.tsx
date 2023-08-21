@@ -6,7 +6,7 @@ import { User } from "forensic-server";
 interface IAuthFunctions {
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
-  autoLogin: () => void;
+  autoLogin: (alreadyAuthenticate: boolean) => void;
   patch: (user: Partial<User>) => void;
 }
 
@@ -59,10 +59,11 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     setUser(null);
   };
 
-  const autoLogin = async () => {
+  const autoLogin = async (alreadyAuthenticate: boolean) => {
     try {
       // @ts-ignore
-      const res = await FClient.reAuthenticate();
+      const res = await FClient.reAuthenticate(alreadyAuthenticate);
+
       if (error) setError("");
       setUser(res.user);
       setLogged(true);

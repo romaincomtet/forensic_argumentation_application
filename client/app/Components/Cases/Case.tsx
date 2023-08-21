@@ -13,11 +13,13 @@ const Case = ({ caseData }: ICaseProps) => {
   if (caseData.managerUserId) {
     bgColor = "bg-white";
   } else {
-    bgColor = "bg-blue-light";
-    centralMessage = "Waiting for User";
-    // TODO: Check invitation if it is accepted or not
-    // bgColor = "bg-red-light";
-    //   centralMessage = "Canceled";
+    if (caseData.invitation && caseData.invitation.status === "pending") {
+      bgColor = "bg-blue-light";
+      centralMessage = "Waiting for User";
+    } else {
+      bgColor = "bg-yellow-default";
+      centralMessage = "User refused invitation";
+    }
   }
 
   return (

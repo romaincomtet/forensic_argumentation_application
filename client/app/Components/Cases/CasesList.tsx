@@ -17,25 +17,30 @@ const CasesList = ({}: ICasesListProps) => {
   const [cases, setCases] = useState<Cases[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [search, setSearch] = useState("");
   const casesPerPage = 6;
   const [isModalOpen, setModalOpen] = useState(false);
 
   const findCases = useCallback(async () => {
-    const cases = await FClient.service("cases").find({
+    let payload: any = {
       query: {
-        // $sort: {
-        //   updatedAt: 1,
-        // },
+        $sort: {
+          updatedAt: -1,
+        },
         $limit: casesPerPage,
         $skip: (currentPage - 1) * casesPerPage,
       },
-    });
+    };
+    if (search) {
+      payload.query.caseName = { $ilike: search + "%" };
+    }
+    const cases = await FClient.service("cases").find(payload);
     if (cases.data) {
       setCases(cases.data);
       const totalPages = Math.ceil(cases.total / casesPerPage);
       setTotalPages(totalPages);
     }
-  }, [currentPage]);
+  }, [currentPage, search]);
 
   useEffect(() => {
     findCases();
@@ -51,6 +56,8 @@ const CasesList = ({}: ICasesListProps) => {
             type="text"
             placeholder="Search by case Name..."
             className="rounded-md border border-grey-dark bg-grey-lightest px-4 py-2 focus:border-blue-default focus:outline-none"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
           <Button onClick={() => setModalOpen(true)}>New case</Button>
         </div>

@@ -35,6 +35,7 @@ app.configure(
   })
 )
 app.configure(postgresql)
+// @ts-ignore
 app.configure(feathersCasl())
 
 app.configure(authentication)

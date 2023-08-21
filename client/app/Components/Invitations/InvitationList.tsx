@@ -4,12 +4,14 @@ import React, { useCallback, useEffect, useState } from "react";
 import Button from "../Button";
 import Pagination from "../Pagination/Pagination";
 import { useAuth } from "@/app/Provider/AuthProvider";
+import { useNotify } from "@/app/Provider/ToastProvider";
 
 interface IInvitationListProps {}
 
 // Container Component
 export const InvitationList = ({}: IInvitationListProps) => {
   const { user } = useAuth();
+  const { notifySuccess, notifyError } = useNotify();
   const [invitations, setInvitations] = useState<Invitations[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -42,8 +44,32 @@ export const InvitationList = ({}: IInvitationListProps) => {
     findInvitations();
   }, [findInvitations]);
 
+  async function handleAccept(id: number) {
+    try {
+      await FClient.service("invitations").patch(id, {
+        status: "accepted",
+      });
+      findInvitations();
+      notifySuccess("Invitation accepted");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function handleRefuse(id: number) {
+    try {
+      await FClient.service("invitations").patch(id, {
+        status: "refused",
+      });
+      findInvitations();
+      notifySuccess("Invitation refused");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
-    <div className="flex min-h-[45vh] flex-col justify-between rounded border bg-white p-4 shadow-lg">
+    <div className="flex min-h-[45vh] w-1/2  flex-col justify-between rounded border bg-white p-4 shadow-lg">
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-blue-default">Invitations</h1>
         <select
@@ -61,7 +87,12 @@ export const InvitationList = ({}: IInvitationListProps) => {
       {/* Here, giving the container a specific max height to ensure overflow works */}
       <div className="flex max-h-[calc(45vh-150px)] flex-1 flex-col overflow-y-auto">
         {filteredInvitations.map((invitation) => (
-          <InvitationRow key={invitation.id} invitation={invitation} />
+          <InvitationRow
+            key={invitation.id}
+            invitation={invitation}
+            handleAccept={handleAccept}
+            handleRefuse={handleRefuse}
+          />
         ))}
       </div>
       <Pagination
@@ -75,9 +106,15 @@ export const InvitationList = ({}: IInvitationListProps) => {
 
 interface IInvitationRowProps {
   invitation: Invitations;
+  handleAccept: (id: number) => void;
+  handleRefuse: (id: number) => void;
 }
 
-const InvitationRow = ({ invitation }: IInvitationRowProps) => {
+const InvitationRow = ({
+  invitation,
+  handleAccept,
+  handleRefuse,
+}: IInvitationRowProps) => {
   return (
     <div className="flex items-center justify-between border-b py-2">
       <div>
@@ -98,8 +135,18 @@ const InvitationRow = ({ invitation }: IInvitationRowProps) => {
         </div>
         {invitation.status === "pending" && (
           <div className="flex space-x-2">
-            <Button variant="success">Accept</Button>
-            <Button variant="danger">Refuse</Button>
+            <Button
+              variant="success"
+              onClick={() => handleAccept(invitation.id)}
+            >
+              Accept
+            </Button>
+            <Button
+              variant="danger"
+              onClick={() => handleRefuse(invitation.id)}
+            >
+              Refuse
+            </Button>
           </div>
         )}
       </div>

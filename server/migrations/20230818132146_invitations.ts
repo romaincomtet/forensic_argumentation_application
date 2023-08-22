@@ -15,14 +15,7 @@ export async function up(knex: Knex): Promise<void> {
       .inTable('cases')
       .onDelete('CASCADE')
       .index()
-    table
-      .integer('teamId')
-      .unsigned()
-      .nullable()
-      .references('id')
-      .inTable('teams')
-      .onDelete('CASCADE')
-      .index()
+    table.boolean('isManager').notNullable().defaultTo(false)
     table.enu('status', ['pending', 'accepted', 'refused', 'canceled']).notNullable().defaultTo('pending')
 
     table.timestamp('createdAt').defaultTo(knex.fn.now())

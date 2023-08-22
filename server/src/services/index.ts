@@ -1,6 +1,4 @@
-import { permissions } from './permissions/permissions'
-import { teamMembers } from './team-members/team-members'
-import { teams } from './teams/teams'
+import { caseMembers } from './case-members/case-members'
 import { invitations } from './invitations/invitations'
 import { cases } from './cases/cases'
 import { user } from './users/users'
@@ -8,9 +6,7 @@ import { user } from './users/users'
 import type { Application } from '../declarations'
 
 export const services = (app: Application) => {
-  app.configure(permissions)
-  app.configure(teamMembers)
-  app.configure(teams)
+  app.configure(caseMembers)
   app.configure(invitations)
   app.configure(cases)
   app.configure(user)

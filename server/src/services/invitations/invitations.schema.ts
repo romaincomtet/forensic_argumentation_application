@@ -12,7 +12,7 @@ export const invitationsSchema = Type.Object(
     invitedBy: Type.Number(),
     userId: Type.Number(),
     caseId: Type.Number(),
-    teamId: Type.Optional(Type.Union([Type.Number(), Type.Null()])),
+    isManager: Type.Optional(Type.Boolean({ default: false })),
     status: StringEnum(['pending', 'accepted', 'refused', 'canceled']),
     createdAt: Type.String({ format: 'date-time' }),
     updatedAt: Type.String({ format: 'date-time' })
@@ -26,9 +26,13 @@ export const invitationsResolver = resolve<Invitations, HookContext>({})
 export const invitationsExternalResolver = resolve<Invitations, HookContext>({})
 
 // Schema for creating new entries
-export const invitationsDataSchema = Type.Pick(invitationsSchema, ['userId', 'caseId', 'teamId', 'status'], {
-  $id: 'InvitationsData'
-})
+export const invitationsDataSchema = Type.Pick(
+  invitationsSchema,
+  ['userId', 'caseId', 'isManager', 'status'],
+  {
+    $id: 'InvitationsData'
+  }
+)
 export type InvitationsData = Static<typeof invitationsDataSchema>
 export const invitationsDataValidator = getValidator(invitationsDataSchema, dataValidator)
 export const invitationsDataResolver = resolve<Invitations, HookContext>({
@@ -78,7 +82,7 @@ export const invitationsQueryProperties = Type.Pick(invitationsSchema, [
   'id',
   'userId',
   'caseId',
-  'teamId',
+  'isManager',
   'status',
   'createdAt',
   'invitedBy'

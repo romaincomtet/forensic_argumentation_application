@@ -46,18 +46,18 @@ export const invitations = (app: Application) => {
     },
     before: {
       all: [
-        authorizeHook,
         schemaHooks.validateQuery(invitationsQueryValidator),
         schemaHooks.resolveQuery(invitationsQueryResolver)
       ],
-      find: [],
-      get: [],
+      find: [authorizeHook],
+      get: [authorizeHook],
       create: [
         disallow('external'),
         schemaHooks.validateData(invitationsDataValidator),
         schemaHooks.resolveData(invitationsDataResolver)
       ],
       patch: [
+        authorizeHook,
         schemaHooks.validateData(invitationsPatchValidator),
         schemaHooks.resolveData(invitationsPatchResolver)
       ],
@@ -71,10 +71,12 @@ export const invitations = (app: Application) => {
           // @ts-ignore
           if (context?.id && context.result?.status === 'accepted') {
             const result = context.result as Invitations
-            if (result.caseId && result.teamId) {
-              // TODO: add team member to team
-              // await context.app.service('teams').patch(result.teamId, {
-              // })
+            if (result.caseId && !result.isManager) {
+              await context.app.service('case-members').create({
+                caseId: result.caseId,
+                userId: result.userId,
+                permissionJson: JSON.stringify({})
+              })
             } else {
               await context.app.service('cases').patch(result.caseId, {
                 managerUserId: result.userId

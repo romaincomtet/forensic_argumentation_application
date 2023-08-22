@@ -35,13 +35,17 @@ export const defineRulesFor = (user: User) => {
     cannot('create', 'cases').because('Only organisation users can create cases')
   }
   // TODO: need to check if user can see the case becuase part of the team
-  can('manage', 'cases', { managerUserId: user.id })
-  can('manage', 'cases', { organisationUserId: user.id })
+  can('read', 'cases')
+  can('update', 'cases', { managerUserId: user.id })
+  can('update', 'cases', { organisationUserId: user.id })
 
   //   ------------------------invitations------------------------
   can('read', 'invitations', { invitedBy: user.id })
   can('read', 'invitations', { userId: user.id })
   can('update', 'invitations', { userId: user.id })
+
+  //   ------------------------case-members------------------------
+  //   called by case in resolver
 
   //   can('manage', 'tasks', { userId: user.id })
   //   can('create-multi', 'posts', { userId: user.id })

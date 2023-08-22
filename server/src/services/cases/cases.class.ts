@@ -4,9 +4,10 @@ import { KnexService } from '@feathersjs/knex'
 import type { KnexAdapterParams, KnexAdapterOptions } from '@feathersjs/knex'
 
 import type { Application } from '../../declarations'
-import type { Cases, CasesData, CasesPatch, CasesQuery } from './cases.schema'
+import type { Cases, CasesData, CasesPatch, CasesQuery, casesMemberData } from './cases.schema'
 import { BadRequest } from '@feathersjs/errors'
 import makeParamsInternal from '../../Utils/makeParamsInternal'
+import { Invitations } from '../invitations/invitations.schema'
 
 export type { Cases, CasesData, CasesPatch, CasesQuery }
 
@@ -24,6 +25,19 @@ export class CasesService<ServiceParams extends Params = CasesParams> extends Kn
     this.app = app
   }
 
+  createQuery(params: KnexAdapterParams<CasesQuery>) {
+    const query = super.createQuery(params)
+    console.log(params.query)
+    // @ts-ignore
+    if (params.query?.['case-members.userId'] || params.query?.$or?.find((q) => q['case-members.userId'])) {
+      query
+        .leftJoin('case-members as case-members', 'cases.id', 'case-members.caseId')
+        .select('case-members.userId')
+    }
+
+    return query
+  }
+
   async create(data: CasesData, params?: ServiceParams): Promise<Cases>
   async create(data: CasesData[], params?: ServiceParams): Promise<Cases[]>
   async create(data: CasesData | CasesData[], params?: ServiceParams): Promise<Cases | Cases[]> {
@@ -35,14 +49,13 @@ export class CasesService<ServiceParams extends Params = CasesParams> extends Kn
       throw new BadRequest('User email not found')
     }
     delete data.email
-    const team = await this.app.service('teams').create({}, makeParamsInternal(params))
-    data.teamId = team.id
     const res = await super.create(data, params)
     await this.app.service('invitations').create(
       {
         userId: managerUser.data[0].id,
         caseId: res.id,
-        status: 'pending'
+        status: 'pending',
+        isManager: true
       },
       makeParamsInternal(params)
     )
@@ -64,7 +77,7 @@ export class CasesService<ServiceParams extends Params = CasesParams> extends Kn
 
       const invitation = await this.app
         .service('invitations')
-        ._find({ query: { caseId: Number(id), teamId: null, status: { $ne: 'canceled' } } })
+        ._find({ query: { caseId: Number(id), isManager: true, status: { $ne: 'canceled' } } })
       await this.app
         .service('invitations')
         .patch(invitation.data[0].id, { status: 'canceled' }, makeParamsInternal(params))
@@ -72,13 +85,50 @@ export class CasesService<ServiceParams extends Params = CasesParams> extends Kn
         {
           userId: managerUser.data[0].id,
           caseId: Number(id),
-          status: 'pending'
+          status: 'pending',
+          isManager: true
         },
         makeParamsInternal(params)
       )
     }
 
     return super.patch(id, data, params)
+  }
+
+  async inviteMember(data: casesMemberData, params?: ServiceParams): Promise<Invitations> {
+    const invitedUser = await this.app.service('users')._find({ query: { email: data.email } })
+    if (invitedUser.total === 0) {
+      throw new BadRequest('User email not found')
+    }
+    const caseMember = await this.app.service('case-members')._find({
+      query: {
+        caseId: Number(data.id),
+        userId: invitedUser.data[0].id
+      }
+    })
+    if (caseMember.total > 0) {
+      throw new BadRequest('User already member of this case')
+    }
+    const invitation = await this.app.service('invitations')._find({
+      query: {
+        caseId: Number(data.id),
+        userId: invitedUser.data[0].id,
+        isManager: false,
+        status: 'pending'
+      }
+    })
+    if (invitation.total > 0) {
+      throw new BadRequest('User already invited')
+    }
+    return await this.app.service('invitations').create(
+      {
+        userId: invitedUser.data[0].id,
+        caseId: Number(data.id),
+        status: 'pending',
+        isManager: false
+      },
+      makeParamsInternal(params)
+    )
   }
 }
 

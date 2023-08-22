@@ -11,7 +11,9 @@ import {
   casesExternalResolver,
   casesDataResolver,
   casesPatchResolver,
-  casesQueryResolver
+  casesQueryResolver,
+  casesMemberDataValidator,
+  casesMemberDataResolver
 } from './cases.schema'
 
 import type { Application } from '../../declarations'
@@ -43,16 +45,16 @@ export const cases = (app: Application) => {
       ]
     },
     before: {
-      all: [
-        authorizeHook,
-        schemaHooks.validateQuery(casesQueryValidator),
-        schemaHooks.resolveQuery(casesQueryResolver)
-      ],
+      all: [schemaHooks.validateQuery(casesQueryValidator), schemaHooks.resolveQuery(casesQueryResolver)],
       find: [],
       get: [],
       create: [schemaHooks.validateData(casesDataValidator), schemaHooks.resolveData(casesDataResolver)],
       patch: [schemaHooks.validateData(casesPatchValidator), schemaHooks.resolveData(casesPatchResolver)],
-      remove: []
+      remove: [],
+      inviteMember: [
+        schemaHooks.validateData(casesMemberDataValidator),
+        schemaHooks.resolveData(casesMemberDataResolver)
+      ]
     },
     after: {
       all: []

@@ -9,7 +9,6 @@ export async function up(knex: Knex): Promise<void> {
     table.string('caseNumber').notNullable()
     table.integer('organisationUserId').unsigned().notNullable().references('id').inTable('users')
     table.integer('managerUserId').unsigned().references('id').inTable('users')
-    table.integer('teamId').unsigned().notNullable().references('id').inTable('teams')
 
     table.timestamp('createdAt').defaultTo(knex.fn.now())
     table.timestamp('updatedAt').defaultTo(knex.fn.now())

@@ -4,24 +4,13 @@ import type { TransportConnection, Application } from '@feathersjs/feathers'
 import authenticationClient from '@feathersjs/authentication-client'
 import type { AuthenticationClientOptions } from '@feathersjs/authentication-client'
 
-import { permissionsClient } from './services/permissions/permissions.shared'
+import { caseMembersClient } from './services/case-members/case-members.shared'
 export type {
-  Permissions,
-  PermissionsData,
-  PermissionsQuery,
-  PermissionsPatch
-} from './services/permissions/permissions.shared'
-
-import { teamMembersClient } from './services/team-members/team-members.shared'
-export type {
-  TeamMembers,
-  TeamMembersData,
-  TeamMembersQuery,
-  TeamMembersPatch
-} from './services/team-members/team-members.shared'
-
-import { teamsClient } from './services/teams/teams.shared'
-export type { Teams, TeamsData, TeamsQuery, TeamsPatch } from './services/teams/teams.shared'
+  CaseMembers,
+  CaseMembersData,
+  CaseMembersQuery,
+  CaseMembersPatch
+} from './services/case-members/case-members.shared'
 
 import { invitationsClient } from './services/invitations/invitations.shared'
 export type {
@@ -53,7 +42,7 @@ export type ClientApplication = Application<ServiceTypes, Configuration>
  * @see https://dove.feathersjs.com/api/client.html
  * @returns The Feathers client application
  */
-export const createClient = <Configuration = any,>(
+export const createClient = <Configuration = any>(
   connection: TransportConnection<ServiceTypes>,
   authenticationOptions: Partial<AuthenticationClientOptions> = {}
 ) => {
@@ -66,8 +55,6 @@ export const createClient = <Configuration = any,>(
   client.configure(userClient)
   client.configure(casesClient)
   client.configure(invitationsClient)
-  client.configure(teamsClient)
-  client.configure(teamMembersClient)
-  client.configure(permissionsClient)
+  client.configure(caseMembersClient)
   return client
 }

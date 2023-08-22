@@ -9,7 +9,7 @@ export type CasesClientService = Pick<CasesService<Params<CasesQuery>>, (typeof 
 
 export const casesPath = 'cases'
 
-export const casesMethods = ['find', 'get', 'create', 'patch', 'remove'] as const
+export const casesMethods = ['find', 'get', 'create', 'patch', 'remove', 'inviteMember'] as const
 
 export const casesClient = (client: ClientApplication) => {
   const connection = client.get('connection')

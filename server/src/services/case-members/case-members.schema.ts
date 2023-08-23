@@ -6,12 +6,20 @@ import type { Static } from '@feathersjs/typebox'
 import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 
+const permissionValueSchema = Type.Partial(
+  Type.Object({
+    canRead: Type.Boolean(),
+    canEdit: Type.Boolean(),
+    canConfigure: Type.Boolean()
+  })
+)
+
 // Main data model schema
 export const caseMembersSchema = Type.Object(
   {
     caseId: Type.Number(),
     userId: Type.Number(),
-    permissionJson: Type.Any()
+    permissionJson: Type.Union([Type.Record(Type.String(), permissionValueSchema), Type.String()])
   },
   { $id: 'CaseMembers', additionalProperties: false }
 )

@@ -18,10 +18,12 @@ import type { Application } from '../../declarations'
 import { CaseMembersService, getOptions } from './case-members.class'
 import { caseMembersPath, caseMembersMethods } from './case-members.shared'
 import { disallow } from 'feathers-hooks-common'
+import { authorize } from 'feathers-casl'
 
 export * from './case-members.class'
 export * from './case-members.schema'
 
+const authorizeHook = authorize({})
 // A configure function that registers the service and its hooks via `app.configure`
 export const caseMembers = (app: Application) => {
   // Register our service on the Feathers application
@@ -42,6 +44,7 @@ export const caseMembers = (app: Application) => {
     },
     before: {
       all: [
+        authorizeHook,
         schemaHooks.validateQuery(caseMembersQueryValidator),
         schemaHooks.resolveQuery(caseMembersQueryResolver)
       ],

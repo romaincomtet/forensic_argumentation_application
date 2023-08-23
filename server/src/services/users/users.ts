@@ -22,7 +22,8 @@ import { iff } from 'feathers-hooks-common'
 
 export * from './users.class'
 export * from './users.schema'
-const authorizeHook = authorize({ adapter: '@feathersjs/mongodb' })
+
+const authorizeHook = authorize()
 
 // A configure function that registers the service and its hooks via `app.configure`
 export const user = (app: Application) => {

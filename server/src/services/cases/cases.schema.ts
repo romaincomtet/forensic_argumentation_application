@@ -44,8 +44,10 @@ export const casesExternalResolver = resolve<Cases, HookContext>({
   },
   caseMembers: async (value, row, context) => {
     if (['get', 'find'].includes(context.method)) {
-      const caseMembers = await context.app.service('case-members')._find({ query: { caseId: row.id } })
-      return caseMembers.data
+      const caseMembers = await context.app
+        .service('case-members')
+        .find({ query: { caseId: row.id }, paginate: false })
+      return caseMembers
     }
     return undefined
   }
@@ -88,7 +90,80 @@ export const casesMemberDataSchema = Type.Intersect(
 
 export type casesMemberData = Static<typeof casesMemberDataSchema>
 export const casesMemberDataValidator = getValidator(casesMemberDataSchema, dataValidator)
-export const casesMemberDataResolver = resolve<casesMemberData, HookContext>({})
+export const casesMemberDataResolver = resolve<casesMemberData, HookContext>({
+  id: async (value, row, context) => {
+    if (value) {
+      const caseExists = await context.app.service('cases')._get(value)
+      if (
+        caseExists.managerUserId !== context.params.user.id &&
+        caseExists.organisationUserId !== context.params.user.id
+      ) {
+        throw new BadRequest('You are not the manager or organisation user of this case')
+      }
+    }
+    return value
+  }
+})
+
+// Schema for creating new entries
+export const editPermissionMemberDataSchema = Type.Pick(
+  caseMembersSchema,
+  ['caseId', 'userId', 'permissionJson'],
+  {
+    $id: 'editPermissionMemberData'
+  }
+)
+
+export type editPermissionMemberData = Static<typeof editPermissionMemberDataSchema>
+export const editPermissionMemberDataValidator = getValidator(editPermissionMemberDataSchema, dataValidator)
+export const editPermissionMemberDataResolver = resolve<editPermissionMemberData, HookContext>({
+  caseId: async (value, row, context) => {
+    if (value) {
+      const caseExists = await context.app.service('cases')._get(value)
+      if (!caseExists) {
+        throw new BadRequest('Case does not exist')
+      }
+      if (
+        caseExists.managerUserId !== context.params.user.id &&
+        caseExists.organisationUserId !== context.params.user.id
+      ) {
+        throw new BadRequest('You are not the manager or organisation user of this case')
+      }
+    }
+    return value
+  },
+  userId: async (value, row, context) => {
+    if (value) {
+      const userExists = await context.app
+        .service('case-members')
+        ._find({ query: { userId: value, caseId: row.caseId } })
+      if (userExists.total === 0) {
+        throw new BadRequest('User is not member of this case')
+      }
+    }
+    return value
+  },
+  permissionJson: async (value, row, context) => {
+    if (!value) {
+      throw new BadRequest('Permission is required')
+    }
+    const keys = Object.keys(value)
+    for (const key of keys) {
+      try {
+        const baord = await context.app.service('boards')._get(key)
+      } catch (error) {
+        throw new BadRequest(`Board ${key} does not exist`)
+      }
+      // @ts-ignore
+      const obj: any = value[key]
+      console.log(obj)
+      if (obj?.canRead === undefined && obj?.canEdit === undefined && obj?.canConfigure === undefined) {
+        throw new BadRequest('json need one of those properties: canRead, canEdit, canConfigure')
+      }
+    }
+    return value
+  }
+})
 
 // Schema for updating existing entries
 export const casesPatchSchema = Type.Intersect(
@@ -169,12 +244,14 @@ export const casesQueryResolver = resolve<CasesQuery, HookContext>({
     return undefined
   },
   $or: async (value, row, context) => {
-    if (!row.managerUserId && !row.organisationUserId && !row['case-members.userId']) {
-      return [
-        { managerUserId: context.params.user.id },
-        { organisationUserId: context.params.user.id },
-        { 'case-members.userId': context.params.user.id }
-      ]
+    if (['find', 'get'].includes(context.method)) {
+      if (!row.managerUserId && !row.organisationUserId && !row['case-members.userId']) {
+        return [
+          { managerUserId: context.params.user.id },
+          { organisationUserId: context.params.user.id },
+          { 'case-members.userId': context.params.user.id }
+        ]
+      }
     }
     return value
   },

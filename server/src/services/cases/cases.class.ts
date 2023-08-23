@@ -4,10 +4,18 @@ import { KnexService } from '@feathersjs/knex'
 import type { KnexAdapterParams, KnexAdapterOptions } from '@feathersjs/knex'
 
 import type { Application } from '../../declarations'
-import type { Cases, CasesData, CasesPatch, CasesQuery, casesMemberData } from './cases.schema'
+import type {
+  Cases,
+  CasesData,
+  CasesPatch,
+  CasesQuery,
+  casesMemberData,
+  editPermissionMemberData
+} from './cases.schema'
 import { BadRequest } from '@feathersjs/errors'
 import makeParamsInternal from '../../Utils/makeParamsInternal'
 import { Invitations } from '../invitations/invitations.schema'
+import { CaseMembers } from '../case-members/case-members.schema'
 
 export type { Cases, CasesData, CasesPatch, CasesQuery }
 
@@ -27,7 +35,6 @@ export class CasesService<ServiceParams extends Params = CasesParams> extends Kn
 
   createQuery(params: KnexAdapterParams<CasesQuery>) {
     const query = super.createQuery(params)
-    console.log(params.query)
     // @ts-ignore
     if (params.query?.['case-members.userId'] || params.query?.$or?.find((q) => q['case-members.userId'])) {
       query
@@ -104,16 +111,16 @@ export class CasesService<ServiceParams extends Params = CasesParams> extends Kn
       query: {
         caseId: Number(data.id),
         userId: invitedUser.data[0].id
-      }
+      },
+      paginate: false
     })
-    if (caseMember.total > 0) {
+    if (caseMember.length > 0) {
       throw new BadRequest('User already member of this case')
     }
     const invitation = await this.app.service('invitations')._find({
       query: {
         caseId: Number(data.id),
         userId: invitedUser.data[0].id,
-        isManager: false,
         status: 'pending'
       }
     })
@@ -129,6 +136,14 @@ export class CasesService<ServiceParams extends Params = CasesParams> extends Kn
       },
       makeParamsInternal(params)
     )
+  }
+
+  async editPermissionMember(data: editPermissionMemberData, params?: ServiceParams): Promise<any> {
+    data.permissionJson = JSON.stringify(data.permissionJson)
+    const res = await this.app
+      .service('case-members')
+      .patch(null, data, { query: { caseId: data.caseId, userId: data.userId } })
+    return res[0]
   }
 }
 

@@ -4,6 +4,9 @@ import type { TransportConnection, Application } from '@feathersjs/feathers'
 import authenticationClient from '@feathersjs/authentication-client'
 import type { AuthenticationClientOptions } from '@feathersjs/authentication-client'
 
+import { boardsClient } from './services/boards/boards.shared'
+export type { Boards, BoardsData, BoardsQuery, BoardsPatch } from './services/boards/boards.shared'
+
 import { caseMembersClient } from './services/case-members/case-members.shared'
 export type {
   CaseMembers,
@@ -42,7 +45,7 @@ export type ClientApplication = Application<ServiceTypes, Configuration>
  * @see https://dove.feathersjs.com/api/client.html
  * @returns The Feathers client application
  */
-export const createClient = <Configuration = any>(
+export const createClient = <Configuration = any,>(
   connection: TransportConnection<ServiceTypes>,
   authenticationOptions: Partial<AuthenticationClientOptions> = {}
 ) => {
@@ -56,5 +59,6 @@ export const createClient = <Configuration = any>(
   client.configure(casesClient)
   client.configure(invitationsClient)
   client.configure(caseMembersClient)
+  client.configure(boardsClient)
   return client
 }

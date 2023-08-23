@@ -36,6 +36,9 @@ export const defineRulesFor = (user: User) => {
   }
   // TODO: need to check if user can see the case becuase part of the team
   can('read', 'cases')
+  can('inviteMember', 'cases')
+  can('editPermissionMember', 'cases')
+
   can('update', 'cases', { managerUserId: user.id })
   can('update', 'cases', { organisationUserId: user.id })
 
@@ -46,6 +49,12 @@ export const defineRulesFor = (user: User) => {
 
   //   ------------------------case-members------------------------
   //   called by case in resolver
+
+  //   ------------------------boards------------------------
+  can('read', 'boards')
+  can('create', 'boards')
+  can('update', 'boards')
+  can('remove', 'boards')
 
   //   can('manage', 'tasks', { userId: user.id })
   //   can('create-multi', 'posts', { userId: user.id })

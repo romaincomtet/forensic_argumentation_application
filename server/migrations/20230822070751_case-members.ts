@@ -3,16 +3,10 @@ import type { Knex } from 'knex'
 
 export async function up(knex: Knex): Promise<void> {
   await knex.schema.createTable('case-members', (table) => {
-    table.primary(['caseId', 'userId'])
+    table.increments('id')
+    table.index(['caseId', 'userId'])
 
-    table
-      .integer('caseId')
-      .unsigned()
-      .notNullable()
-      .references('id')
-      .inTable('cases')
-      .onDelete('CASCADE')
-      .index()
+    table.integer('caseId').unsigned().notNullable().references('id').inTable('cases').onDelete('CASCADE')
     table.integer('userId').unsigned().notNullable().references('id').inTable('users').onDelete('CASCADE')
     table.jsonb('permissionJson').nullable()
   })

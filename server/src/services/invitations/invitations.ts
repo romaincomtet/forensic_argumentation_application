@@ -24,7 +24,7 @@ import { authorize } from 'feathers-casl'
 export * from './invitations.class'
 export * from './invitations.schema'
 
-const authorizeHook = authorize({ adapter: '@feathersjs/mongodb' })
+const authorizeHook = authorize()
 
 // A configure function that registers the service and its hooks via `app.configure`
 export const invitations = (app: Application) => {
@@ -75,7 +75,7 @@ export const invitations = (app: Application) => {
               await context.app.service('case-members').create({
                 caseId: result.caseId,
                 userId: result.userId,
-                permissionJson: JSON.stringify({})
+                permissionJson: {}
               })
             } else {
               await context.app.service('cases').patch(result.caseId, {

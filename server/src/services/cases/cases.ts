@@ -13,7 +13,9 @@ import {
   casesPatchResolver,
   casesQueryResolver,
   casesMemberDataValidator,
-  casesMemberDataResolver
+  casesMemberDataResolver,
+  editPermissionMemberDataValidator,
+  editPermissionMemberDataResolver
 } from './cases.schema'
 
 import type { Application } from '../../declarations'
@@ -24,7 +26,7 @@ import { authorize } from 'feathers-casl'
 
 export * from './cases.class'
 export * from './cases.schema'
-const authorizeHook = authorize({ adapter: '@feathersjs/mongodb' })
+const authorizeHook = authorize({})
 
 // A configure function that registers the service and its hooks via `app.configure`
 export const cases = (app: Application) => {
@@ -45,7 +47,11 @@ export const cases = (app: Application) => {
       ]
     },
     before: {
-      all: [schemaHooks.validateQuery(casesQueryValidator), schemaHooks.resolveQuery(casesQueryResolver)],
+      all: [
+        authorizeHook,
+        schemaHooks.validateQuery(casesQueryValidator),
+        schemaHooks.resolveQuery(casesQueryResolver)
+      ],
       find: [],
       get: [],
       create: [schemaHooks.validateData(casesDataValidator), schemaHooks.resolveData(casesDataResolver)],
@@ -54,6 +60,10 @@ export const cases = (app: Application) => {
       inviteMember: [
         schemaHooks.validateData(casesMemberDataValidator),
         schemaHooks.resolveData(casesMemberDataResolver)
+      ],
+      editPermissionMember: [
+        schemaHooks.validateData(editPermissionMemberDataValidator),
+        schemaHooks.resolveData(editPermissionMemberDataResolver)
       ]
     },
     after: {

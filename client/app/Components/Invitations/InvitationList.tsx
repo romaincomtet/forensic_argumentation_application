@@ -17,6 +17,7 @@ export const InvitationList = ({}: IInvitationListProps) => {
   const [totalPages, setTotalPages] = useState(1);
   const casesPerPage = 20;
   const [filter, setFilter] = useState<Invitations["status"]>("pending");
+
   const filteredInvitations = invitations.filter(
     (invitation) => invitation.status === filter,
   );

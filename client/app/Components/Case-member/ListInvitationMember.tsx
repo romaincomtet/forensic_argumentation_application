@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import FClient from "@/app/Api/FeathersClient";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import ConfirmationModal from "../Modal/ModalBoard";
 
 interface IListInvitationMemberProps {
   caseId: number;
@@ -18,6 +19,18 @@ const ListInvitationMember = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const membersPerPage = 5; // Adjust this value as per your requirements
+  const [isModalConfirmationOpen, setIsModalConfirmationOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState<number | undefined>(undefined);
+
+  const handleDelete = async () => {
+    if (selectedId) {
+      await FClient.service("invitations").managerCancelInvitation({
+        id: selectedId,
+      });
+      setIsModalConfirmationOpen(false);
+      findInvitationMember();
+    }
+  };
 
   const findInvitationMember = useCallback(async () => {
     let payload: any = {
@@ -55,6 +68,8 @@ const ListInvitationMember = ({
           <InvitationComponent
             key={invitationData.id}
             invitation={invitationData}
+            setSelectedId={setSelectedId}
+            setIsModalConfirmationOpen={setIsModalConfirmationOpen}
           />
         ))}
       </div>
@@ -63,15 +78,29 @@ const ListInvitationMember = ({
         totalPages={totalPages}
         onChangePage={setCurrentPage}
       />
+      <ConfirmationModal
+        isOpen={isModalConfirmationOpen}
+        onClose={() => setIsModalConfirmationOpen(false)}
+        onConfirm={handleDelete}
+        titleModal="Are you sure you want cancel this invitation ?"
+        cancelButtonText="return"
+        confirmButtonText="Cancel invitation"
+      />
     </>
   );
 };
 
 interface IInvitationComponentProps {
   invitation: Invitations;
+  setSelectedId: (id: number) => void;
+  setIsModalConfirmationOpen: (isOpen: boolean) => void;
 }
 
-const InvitationComponent = ({ invitation }: IInvitationComponentProps) => {
+const InvitationComponent = ({
+  invitation,
+  setIsModalConfirmationOpen,
+  setSelectedId,
+}: IInvitationComponentProps) => {
   return (
     <div className="flex items-center justify-between px-2 py-3">
       <div className="flex space-x-3">
@@ -82,7 +111,13 @@ const InvitationComponent = ({ invitation }: IInvitationComponentProps) => {
         {invitation.isManager && <p className="text-grey-dark">Manager</p>}
         <p className="text-yellow-default">{invitation.status}</p>
 
-        <button className="hover:bg-red-dark rounded-full bg-red-default p-2 transition duration-300 ease-in-out">
+        <button
+          className="hover:bg-red-dark rounded-full bg-red-default p-2 transition duration-300 ease-in-out"
+          onClick={() => {
+            setSelectedId(invitation.id);
+            setIsModalConfirmationOpen(true);
+          }}
+        >
           <FontAwesomeIcon icon={faTrash} className="text-white" />
         </button>
       </div>

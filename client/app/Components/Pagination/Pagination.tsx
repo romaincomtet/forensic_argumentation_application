@@ -27,9 +27,9 @@ const Pagination = ({ currentPage, totalPages, onChangePage }: IPagination) => {
 
       <Button
         onClick={() => onChangePage(Math.min(currentPage + 1, totalPages))}
-        disabled={currentPage === totalPages}
+        disabled={currentPage >= totalPages}
         className={`${
-          currentPage === totalPages
+          currentPage >= totalPages
             ? "cursor-not-allowed opacity-50"
             : "hover:bg-blue-dark"
         }`}

@@ -10,6 +10,7 @@ import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import ModalMember from "../Modal/ModalMember";
 import ListInvitationMember from "./ListInvitationMember";
 import ModalMemberEdit from "../Modal/ModalMemberEdit";
+import ConfirmationModal from "../Modal/ModalBoard";
 
 interface IMembersListProps {
   caseInfo: Cases;
@@ -25,12 +26,24 @@ const MembersList = ({ caseInfo, boards }: IMembersListProps) => {
   const membersPerPage = 6; // Adjust this value as per your requirements
   const [isModalOpen, setModalOpen] = useState(false);
   const [isModalEditOpen, setIsModalEditOpen] = useState(false);
+  const [isModalConfirmationOpen, setIsModalConfirmationOpen] = useState(false);
   const [memberIdSelected, setMemberIdSelected] = useState<number | undefined>(
     undefined,
   );
 
   const handleRefresh = () => {
     setRefresh(!refresh);
+  };
+
+  const handleDelete = async () => {
+    if (memberIdSelected) {
+      await FClient.service("case-members").managerRemoveMember({
+        caseId: caseInfo.id,
+        userId: memberIdSelected,
+      });
+      setIsModalConfirmationOpen(false);
+      handleRefresh();
+    }
   };
 
   const findMembers = useCallback(async () => {
@@ -84,6 +97,7 @@ const MembersList = ({ caseInfo, boards }: IMembersListProps) => {
             member={memberData}
             setMemberIdSelected={setMemberIdSelected}
             setIsModalEditOpen={setIsModalEditOpen}
+            setIsModalConfirmationOpen={setIsModalConfirmationOpen}
           />
         ))}
       </div>
@@ -108,6 +122,14 @@ const MembersList = ({ caseInfo, boards }: IMembersListProps) => {
         )}
         boards={boards}
       />
+      <ConfirmationModal
+        isOpen={isModalConfirmationOpen}
+        onClose={() => setIsModalConfirmationOpen(false)}
+        onConfirm={handleDelete}
+        titleModal="Are you sure you want to delete this member ?"
+        cancelButtonText="Cancel"
+        confirmButtonText="Delete"
+      />
     </div>
   );
 };
@@ -116,12 +138,14 @@ interface IMemberProps {
   member: CaseMembers;
   setMemberIdSelected: (index: number) => void;
   setIsModalEditOpen: (value: boolean) => void;
+  setIsModalConfirmationOpen: (value: boolean) => void;
 }
 
 const Member = ({
   member,
   setMemberIdSelected,
   setIsModalEditOpen,
+  setIsModalConfirmationOpen,
 }: IMemberProps) => {
   return (
     <div className="flex items-center justify-between px-2 py-3">
@@ -141,7 +165,14 @@ const Member = ({
           />
         </button>
         <button className="hover:bg-red-dark rounded-full bg-red-default p-2 transition duration-300 ease-in-out">
-          <FontAwesomeIcon icon={faTrash} className="text-white" />
+          <FontAwesomeIcon
+            icon={faTrash}
+            className="text-white"
+            onClick={() => {
+              setMemberIdSelected(member.userId);
+              setIsModalConfirmationOpen(true);
+            }}
+          />
         </button>
       </div>
     </div>

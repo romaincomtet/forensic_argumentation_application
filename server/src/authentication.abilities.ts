@@ -46,11 +46,13 @@ export const defineRulesFor = (user: User) => {
   can('read', 'invitations', { invitedBy: user.id })
   can('read', 'invitations', { userId: user.id })
   can('update', 'invitations', { userId: user.id })
+  can('ManagerCancelInvitation', 'invitations')
 
   //   ------------------------case-members------------------------
   //   called by case in resolver
   // TODO: add protection get member when not case manager or organisation user
   can('read', 'case-members')
+  can('ManagerRemoveMember', 'case-members')
 
   //   ------------------------boards------------------------
   can('read', 'boards')

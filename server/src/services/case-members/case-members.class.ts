@@ -16,13 +16,21 @@ export class CaseMembersService<ServiceParams extends Params = CaseMembersParams
   CaseMembersData,
   CaseMembersParams,
   CaseMembersPatch
-> {}
+> {
+  async ManagerRemoveMember(data: CaseMembers, params: CaseMembersParams): Promise<CaseMembers> {
+    const del = await super.remove(null, { query: { caseId: data.caseId, userId: data.userId } })
+    if (Array.isArray(del)) {
+      return del[0]
+    }
+    return del
+  }
+}
 
 export const getOptions = (app: Application): KnexAdapterOptions => {
   return {
     paginate: app.get('paginate'),
     Model: app.get('postgresqlClient'),
     name: 'case-members',
-    multi: ['patch']
+    multi: ['patch', 'remove']
   }
 }

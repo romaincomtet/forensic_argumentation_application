@@ -11,7 +11,9 @@ import {
   caseMembersExternalResolver,
   caseMembersDataResolver,
   caseMembersPatchResolver,
-  caseMembersQueryResolver
+  caseMembersQueryResolver,
+  managerRemoveMemberValidator,
+  managerRemoveMemberResolver
 } from './case-members.schema'
 
 import type { Application } from '../../declarations'
@@ -60,7 +62,11 @@ export const caseMembers = (app: Application) => {
         schemaHooks.validateData(caseMembersPatchValidator),
         schemaHooks.resolveData(caseMembersPatchResolver)
       ],
-      remove: []
+      remove: [disallow('external')],
+      ManagerRemoveMember: [
+        schemaHooks.validateData(managerRemoveMemberValidator),
+        schemaHooks.resolveData(managerRemoveMemberResolver)
+      ]
     },
     after: {
       all: []

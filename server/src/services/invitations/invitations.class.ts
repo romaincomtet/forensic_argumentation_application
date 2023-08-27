@@ -4,7 +4,14 @@ import { KnexService } from '@feathersjs/knex'
 import type { KnexAdapterParams, KnexAdapterOptions } from '@feathersjs/knex'
 
 import type { Application } from '../../declarations'
-import type { Invitations, InvitationsData, InvitationsPatch, InvitationsQuery } from './invitations.schema'
+import type {
+  Invitations,
+  InvitationsCancel,
+  InvitationsData,
+  InvitationsPatch,
+  InvitationsQuery
+} from './invitations.schema'
+import { User } from '../users/users.schema'
 
 export type { Invitations, InvitationsData, InvitationsPatch, InvitationsQuery }
 
@@ -16,7 +23,11 @@ export class InvitationsService<ServiceParams extends Params = InvitationsParams
   InvitationsData,
   InvitationsParams,
   InvitationsPatch
-> {}
+> {
+  async ManagerCancelInvitation(data: InvitationsCancel, params: InvitationsParams): Promise<Invitations> {
+    return super.patch(data.id, { status: 'canceled' })
+  }
+}
 
 export const getOptions = (app: Application): KnexAdapterOptions => {
   return {

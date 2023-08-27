@@ -76,6 +76,9 @@ export const invitationsPatchResolver = resolve<Invitations, HookContext>({
   status: async (value, row, context) => {
     if (context.params.provider === undefined) return value
 
+    if (value === 'canceled') {
+      throw new BadRequest('You are not allowed to cancel invitation')
+    }
     const invitation = await context.app.service('invitations')._get(context.id!)
     if (invitation.userId !== context.params.user.id) {
       throw new BadRequest('You are not allowed to update this invitation')
@@ -87,6 +90,28 @@ export const invitationsPatchResolver = resolve<Invitations, HookContext>({
   },
   updatedAt: async () => {
     return new Date().toISOString()
+  }
+})
+
+// Schema for cancelling invitation when manager
+export const invitationsCancelSchema = Type.Pick(invitationsSchema, ['id'], {
+  $id: 'invitationsCancel'
+})
+export type InvitationsCancel = Static<typeof invitationsCancelSchema>
+export const invitationsCancelValidator = getValidator(invitationsCancelSchema, dataValidator)
+export const invitationsCancelResolver = resolve<Invitations, HookContext>({
+  id: async (value, row, context) => {
+    if (!value) throw new BadRequest('id is required')
+    const invitationInfo = await context.app.service('invitations')._get(value)
+
+    const caseInfo = await context.app.service('cases')._get(invitationInfo.caseId)
+    if (
+      caseInfo.managerUserId !== context.params.user?.id &&
+      caseInfo.organisationUserId !== context.params.user?.id
+    ) {
+      throw new Error('You are not allowed to cancel this invitation')
+    }
+    return value
   }
 })
 

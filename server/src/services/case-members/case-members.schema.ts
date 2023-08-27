@@ -6,6 +6,7 @@ import type { Static } from '@feathersjs/typebox'
 import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 import { userSchema } from '../users/users.schema'
+import { BadRequest } from '@feathersjs/errors'
 
 const permissionValueSchema = Type.Partial(
   Type.Object({
@@ -57,6 +58,32 @@ export const caseMembersPatchSchema = Type.Partial(caseMembersSchema, {
 export type CaseMembersPatch = Static<typeof caseMembersPatchSchema>
 export const caseMembersPatchValidator = getValidator(caseMembersPatchSchema, dataValidator)
 export const caseMembersPatchResolver = resolve<CaseMembers, HookContext>({})
+
+// Schema for cancelling invitation when manager
+export const managerRemoveMemberSchema = Type.Pick(caseMembersSchema, ['userId', 'caseId'], {
+  $id: 'managerRemoveMember'
+})
+export type ManagerRemoveMember = Static<typeof managerRemoveMemberSchema>
+export const managerRemoveMemberValidator = getValidator(managerRemoveMemberSchema, dataValidator)
+export const managerRemoveMemberResolver = resolve<CaseMembers, HookContext>({
+  userId: async (value, row, context) => {
+    const caseInfo = await context.app.service('cases')._get(row.caseId)
+    if (
+      caseInfo.managerUserId !== context.params.user?.id &&
+      caseInfo.organisationUserId !== context.params.user?.id
+    ) {
+      throw new BadRequest('You are not allowed to cancel this invitation')
+    }
+
+    const caseMemberInfo = await context.app
+      .service('case-members')
+      ._find({ query: { caseId: row.caseId, userId: value } })
+    if (caseMemberInfo.total === 0) {
+      throw new Error('This user is not a member of this case')
+    }
+    return value
+  }
+})
 
 // Schema for allowed query properties
 export const caseMembersQueryProperties = Type.Pick(caseMembersSchema, ['caseId', 'userId'])

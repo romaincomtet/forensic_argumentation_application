@@ -12,7 +12,9 @@ import {
   invitationsDataResolver,
   invitationsPatchResolver,
   invitationsQueryResolver,
-  Invitations
+  Invitations,
+  invitationsCancelValidator,
+  invitationsCancelResolver
 } from './invitations.schema'
 
 import type { Application } from '../../declarations'
@@ -61,7 +63,12 @@ export const invitations = (app: Application) => {
         schemaHooks.validateData(invitationsPatchValidator),
         schemaHooks.resolveData(invitationsPatchResolver)
       ],
-      remove: []
+      remove: [disallow('external')],
+      ManagerCancelInvitation: [
+        authorizeHook,
+        schemaHooks.validateData(invitationsCancelValidator),
+        schemaHooks.resolveData(invitationsCancelResolver)
+      ]
     },
     after: {
       all: [],

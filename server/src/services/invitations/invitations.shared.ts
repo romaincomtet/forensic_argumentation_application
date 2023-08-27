@@ -18,7 +18,14 @@ export type InvitationsClientService = Pick<
 
 export const invitationsPath = 'invitations'
 
-export const invitationsMethods = ['find', 'get', 'create', 'patch', 'remove'] as const
+export const invitationsMethods = [
+  'find',
+  'get',
+  'create',
+  'patch',
+  'remove',
+  'ManagerCancelInvitation'
+] as const
 
 export const invitationsClient = (client: ClientApplication) => {
   const connection = client.get('connection')

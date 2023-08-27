@@ -11,7 +11,7 @@ import { User } from '../users/users.schema'
 export type { Boards, BoardsData, BoardsPatch, BoardsQuery }
 
 export interface BoardsParams extends KnexAdapterParams<BoardsQuery> {
-  user: User
+  user?: User
 }
 
 // By default calls the standard Knex adapter service methods but can be customized with your own functionality.
@@ -37,7 +37,7 @@ export class BoardsService<ServiceParams extends Params = BoardsParams> extends 
       if (!caseExists) {
         throw new BadRequest('Case does not exist')
       }
-      if (caseExists.managerUserId !== params.user.id && caseExists.organisationUserId !== params.user.id) {
+      if (caseExists.managerUserId !== params.user?.id && caseExists.organisationUserId !== params.user?.id) {
         throw new BadRequest('You are not the manager or organisation user of this case')
       }
     }

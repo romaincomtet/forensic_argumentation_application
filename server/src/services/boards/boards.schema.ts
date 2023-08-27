@@ -11,7 +11,7 @@ import { BadRequest } from '@feathersjs/errors'
 export const boardsSchema = Type.Object(
   {
     id: Type.Number(),
-    caseName: Type.String(),
+    boardName: Type.String(),
     caseId: Type.Number(), // This assumes you have a 'cases' schema defined somewhere
 
     createdAt: Type.String({ format: 'date-time' }),
@@ -26,7 +26,7 @@ export const boardsResolver = resolve<Boards, HookContext>({})
 export const boardsExternalResolver = resolve<Boards, HookContext>({})
 
 // Schema for creating new entries
-export const boardsDataSchema = Type.Pick(boardsSchema, ['caseName', 'caseId'], {
+export const boardsDataSchema = Type.Pick(boardsSchema, ['boardName', 'caseId'], {
   $id: 'BoardsData'
 })
 export type BoardsData = Static<typeof boardsDataSchema>
@@ -50,7 +50,7 @@ export const boardsDataResolver = resolve<Boards, HookContext>({
 })
 
 // Schema for updating existing entries
-export const boardsPatchSchema = Type.Pick(boardsSchema, ['caseName'], {
+export const boardsPatchSchema = Type.Pick(boardsSchema, ['boardName'], {
   $id: 'BoardsPatch'
 })
 export type BoardsPatch = Static<typeof boardsPatchSchema>
@@ -79,7 +79,7 @@ export const boardsPatchResolver = resolve<Boards, HookContext>({
 })
 
 // Schema for allowed query properties
-export const boardsQueryProperties = Type.Pick(boardsSchema, ['caseName', 'caseId', 'updatedAt'])
+export const boardsQueryProperties = Type.Pick(boardsSchema, ['boardName', 'caseId', 'updatedAt'])
 export const boardsQuerySchema = Type.Intersect(
   [
     querySyntax(boardsQueryProperties),

@@ -50,7 +50,7 @@ export const userPatchResolver = resolve<User, HookContext>({
 })
 
 // Schema for allowed query properties
-export const userQueryProperties = Type.Pick(userSchema, ['id', 'email'])
+export const userQueryProperties = Type.Pick(userSchema, ['id', 'email', 'name'])
 export const userQuerySchema = Type.Intersect(
   [
     querySyntax(userQueryProperties),

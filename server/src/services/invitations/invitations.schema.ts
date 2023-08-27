@@ -1,11 +1,12 @@
 // // For more information about this file see https://dove.feathersjs.com/guides/cli/service.schemas.html
-import { resolve } from '@feathersjs/schema'
+import { resolve, virtual } from '@feathersjs/schema'
 import { StringEnum, Type, getValidator, querySyntax } from '@feathersjs/typebox'
 import type { Static } from '@feathersjs/typebox'
 
 import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 import { BadRequest } from '@feathersjs/errors'
+import { userSchema } from '../users/users.schema'
 export const invitationsSchema = Type.Object(
   {
     id: Type.Number(),
@@ -15,7 +16,9 @@ export const invitationsSchema = Type.Object(
     isManager: Type.Optional(Type.Boolean({ default: false })),
     status: StringEnum(['pending', 'accepted', 'refused', 'canceled']),
     createdAt: Type.String({ format: 'date-time' }),
-    updatedAt: Type.String({ format: 'date-time' })
+    updatedAt: Type.String({ format: 'date-time' }),
+
+    user: Type.Optional(Type.Ref(userSchema))
   },
   { $id: 'Invitations', additionalProperties: false }
 )
@@ -23,7 +26,17 @@ export type Invitations = Static<typeof invitationsSchema>
 export const invitationsValidator = getValidator(invitationsSchema, dataValidator)
 export const invitationsResolver = resolve<Invitations, HookContext>({})
 
-export const invitationsExternalResolver = resolve<Invitations, HookContext>({})
+export const invitationsExternalResolver = resolve<Invitations, HookContext>({
+  user: virtual(async (row, context) => {
+    if (row.userId) {
+      const user = await context.app
+        .service('users')
+        ._get(row.userId, { query: { $select: ['email', 'name'] } })
+      return user
+    }
+    return undefined
+  })
+})
 
 // Schema for creating new entries
 export const invitationsDataSchema = Type.Pick(

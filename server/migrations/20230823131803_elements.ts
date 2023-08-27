@@ -2,16 +2,16 @@
 import type { Knex } from 'knex'
 
 export async function up(knex: Knex): Promise<void> {
-  await knex.schema.createTable('boards', (table) => {
+  await knex.schema.createTable('elements', (table) => {
     table.increments('id')
 
-    table.string('boardName').notNullable()
+    table.string('name')
     table
-      .integer('caseId')
+      .integer('boardId')
       .unsigned()
       .notNullable()
       .references('id')
-      .inTable('cases')
+      .inTable('boards')
       .onDelete('CASCADE')
       .index()
 
@@ -21,5 +21,5 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 export async function down(knex: Knex): Promise<void> {
-  await knex.schema.dropTable('boards')
+  await knex.schema.dropTable('elements')
 }

@@ -49,6 +49,8 @@ export const defineRulesFor = (user: User) => {
 
   //   ------------------------case-members------------------------
   //   called by case in resolver
+  // TODO: add protection get member when not case manager or organisation user
+  can('read', 'case-members')
 
   //   ------------------------boards------------------------
   can('read', 'boards')

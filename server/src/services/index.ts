@@ -1,3 +1,4 @@
+import { elements } from './elements/elements'
 import { boards } from './boards/boards'
 import { caseMembers } from './case-members/case-members'
 import { invitations } from './invitations/invitations'
@@ -7,6 +8,7 @@ import { user } from './users/users'
 import type { Application } from '../declarations'
 
 export const services = (app: Application) => {
+  app.configure(elements)
   app.configure(boards)
   app.configure(caseMembers)
   app.configure(invitations)

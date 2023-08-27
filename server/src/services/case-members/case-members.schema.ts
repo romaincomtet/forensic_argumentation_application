@@ -1,10 +1,11 @@
 // // For more information about this file see https://dove.feathersjs.com/guides/cli/service.schemas.html
-import { resolve } from '@feathersjs/schema'
+import { resolve, virtual } from '@feathersjs/schema'
 import { Type, getValidator, querySyntax } from '@feathersjs/typebox'
 import type { Static } from '@feathersjs/typebox'
 
 import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
+import { userSchema } from '../users/users.schema'
 
 const permissionValueSchema = Type.Partial(
   Type.Object({
@@ -19,7 +20,9 @@ export const caseMembersSchema = Type.Object(
   {
     caseId: Type.Number(),
     userId: Type.Number(),
-    permissionJson: Type.Union([Type.Record(Type.String(), permissionValueSchema), Type.String()])
+    permissionJson: Type.Union([Type.Record(Type.String(), permissionValueSchema), Type.String()]),
+
+    user: Type.Optional(Type.Ref(userSchema))
   },
   { $id: 'CaseMembers', additionalProperties: false }
 )
@@ -27,7 +30,17 @@ export type CaseMembers = Static<typeof caseMembersSchema>
 export const caseMembersValidator = getValidator(caseMembersSchema, dataValidator)
 export const caseMembersResolver = resolve<CaseMembers, HookContext>({})
 
-export const caseMembersExternalResolver = resolve<CaseMembers, HookContext>({})
+export const caseMembersExternalResolver = resolve<CaseMembers, HookContext>({
+  user: virtual(async (row, context) => {
+    if (row.userId) {
+      const user = await context.app
+        .service('users')
+        ._get(row.userId, { query: { $select: ['email', 'name'] } })
+      return user
+    }
+    return undefined
+  })
+})
 
 // Schema for creating new entries
 export const caseMembersDataSchema = Type.Pick(caseMembersSchema, ['caseId', 'userId', 'permissionJson'], {

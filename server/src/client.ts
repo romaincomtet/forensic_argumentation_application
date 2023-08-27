@@ -4,6 +4,14 @@ import type { TransportConnection, Application } from '@feathersjs/feathers'
 import authenticationClient from '@feathersjs/authentication-client'
 import type { AuthenticationClientOptions } from '@feathersjs/authentication-client'
 
+import { elementsClient } from './services/elements/elements.shared'
+export type {
+  Elements,
+  ElementsData,
+  ElementsQuery,
+  ElementsPatch
+} from './services/elements/elements.shared'
+
 import { boardsClient } from './services/boards/boards.shared'
 export type { Boards, BoardsData, BoardsQuery, BoardsPatch } from './services/boards/boards.shared'
 
@@ -60,5 +68,6 @@ export const createClient = <Configuration = any,>(
   client.configure(invitationsClient)
   client.configure(caseMembersClient)
   client.configure(boardsClient)
+  client.configure(elementsClient)
   return client
 }

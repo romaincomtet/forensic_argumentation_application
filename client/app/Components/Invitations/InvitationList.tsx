@@ -119,7 +119,7 @@ const InvitationRow = ({
     <div className="flex items-center justify-between border-b py-2">
       <div>
         <span className="font-bold text-grey-default">Case:</span>{" "}
-        {invitation.teamId ? "manager" : invitation.caseId}
+        {invitation.isManager ? "manager" : invitation.caseId}
       </div>
       <div>
         <span className="font-bold text-grey-default">Invited By:</span>{" "}

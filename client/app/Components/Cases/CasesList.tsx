@@ -6,13 +6,10 @@ import Pagination from "../Pagination/Pagination";
 import Case from "./Case";
 import React, { useState, useEffect, useCallback } from "react";
 import { Cases } from "forensic-server";
+import { useRouter } from "next/router";
 
 interface ICasesListProps {}
-const sampleCases = [
-  { Id: 1, Preview: "/caseImage.png", caseName: "Case 1" },
-  { Id: 2, Preview: "/caseImage.png", caseName: "Case 2" },
-  // ... add more cases as needed
-];
+
 const CasesList = ({}: ICasesListProps) => {
   const [cases, setCases] = useState<Cases[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -51,7 +48,6 @@ const CasesList = ({}: ICasesListProps) => {
       <div className="mb-6 flex items-center justify-between">
         <h2 className="text-2xl font-bold text-blue-default">List of Cases</h2>
         <div className="flex items-center space-x-4">
-          {/* TODO: add search */}
           <input
             type="text"
             placeholder="Search by case Name..."

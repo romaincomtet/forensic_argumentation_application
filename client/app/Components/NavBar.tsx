@@ -13,7 +13,6 @@ const Navbar = ({ pageName }: INavbarProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const router = useRouter();
   const { logout, user } = useAuth();
-  console.log(user);
 
   return (
     <div className="flex w-full items-center justify-between bg-white p-4 shadow-md">

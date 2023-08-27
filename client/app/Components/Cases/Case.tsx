@@ -1,12 +1,14 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCog } from "@fortawesome/free-solid-svg-icons";
 import { Cases } from "forensic-server";
+import { useRouter } from "next/router";
 
 interface ICaseProps {
   caseData: Cases;
 }
 
 const Case = ({ caseData }: ICaseProps) => {
+  const router = useRouter();
   let bgColor;
   let centralMessage;
 
@@ -25,6 +27,7 @@ const Case = ({ caseData }: ICaseProps) => {
   return (
     <div
       className={`relative h-[150px] w-[200px] rounded-lg ${bgColor} shadow-md transition-shadow duration-200 hover:shadow-lg`}
+      onClick={() => router.push(`/protect/case/${caseData.id}`)}
     >
       {centralMessage && (
         <div className="absolute inset-0 flex items-center justify-center">
@@ -39,6 +42,10 @@ const Case = ({ caseData }: ICaseProps) => {
       <FontAwesomeIcon
         icon={faCog}
         size="lg"
+        onClick={(e) => {
+          e.stopPropagation();
+          router.push(`/protect/case/settings/${caseData.id}`);
+        }}
         className="absolute right-2 top-2 cursor-pointer text-grey-dark"
       />
     </div>

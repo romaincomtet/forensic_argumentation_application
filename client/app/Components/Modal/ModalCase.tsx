@@ -30,7 +30,7 @@ const ModalCase = ({ isOpen, onClose, refresh }: IModalCase) => {
             .max(20, "Must be 20 characters or less")
             .required("Required"),
           caseName: Yup.string()
-            .max(20, "Must be 20 characters or less")
+            .max(60, "Must be 60 characters or less")
             .required("Required"),
           caseNumber: Yup.string()
             .max(20, "Must be 20 characters or less")

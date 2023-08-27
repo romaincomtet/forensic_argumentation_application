@@ -75,7 +75,8 @@ export default function Register() {
             <MyTextInput label="Email" name="email" type="email" />
             <MyTextInput label="Password" name="password" type="password" />
             <MyCheckbox name="isOrganisationUser">
-              Etes vous un manager de case
+              Are you the responsible person for the system in your
+              organisation?
             </MyCheckbox>
             <p className="mb-4 mt-3 text-sm text-grey-dark">
               If you already have an account,{" "}

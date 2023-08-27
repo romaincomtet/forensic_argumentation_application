@@ -29,7 +29,6 @@ const DashboardPage = () => {
     <div className="min-w-screen flex min-h-screen flex-col bg-grey-light">
       <Navbar pageName="Dashboard" />
       <CasesList />
-      <BoardsList boards={sampleBoards} />
     </div>
   );
 };

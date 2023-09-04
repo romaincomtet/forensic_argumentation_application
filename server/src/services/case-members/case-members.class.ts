@@ -4,7 +4,13 @@ import { KnexService } from '@feathersjs/knex'
 import type { KnexAdapterParams, KnexAdapterOptions } from '@feathersjs/knex'
 
 import type { Application } from '../../declarations'
-import type { CaseMembers, CaseMembersData, CaseMembersPatch, CaseMembersQuery } from './case-members.schema'
+import type {
+  CaseMembers,
+  CaseMembersData,
+  CaseMembersPatch,
+  CaseMembersQuery,
+  ManagerRemoveMember
+} from './case-members.schema'
 
 export type { CaseMembers, CaseMembersData, CaseMembersPatch, CaseMembersQuery }
 
@@ -17,7 +23,7 @@ export class CaseMembersService<ServiceParams extends Params = CaseMembersParams
   CaseMembersParams,
   CaseMembersPatch
 > {
-  async ManagerRemoveMember(data: CaseMembers, params: CaseMembersParams): Promise<CaseMembers> {
+  async managerRemoveMember(data: ManagerRemoveMember, params?: CaseMembersParams): Promise<CaseMembers> {
     const del = await super.remove(null, { query: { caseId: data.caseId, userId: data.userId } })
     if (Array.isArray(del)) {
       return del[0]

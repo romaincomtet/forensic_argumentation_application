@@ -1,10 +1,9 @@
 version: "3"
 
 services:
-  api:
+  server:
     build:
-      context: ${API_PATH}
-      target: dev
+      context: ./server
     ports:
       - "3030:3030"
     environment:
@@ -14,13 +13,9 @@ services:
     depends_on:
       - db
     restart: on-failure
-    volumes:
-      - ./src:/api/src
-      - ./config:/api/config
-      - ./test:/api/test
-      - ./public:/api/public
     networks:
       - conection-db
+      - connection-api
 
   db:
     image: postgres:15-alpine
@@ -36,8 +31,19 @@ services:
       - conection-db
     volumes:
       - db-data:/var/lib/postgresql/data
+    restart: always
+
+  client:
+    build:
+      context: ./client
+    restart: on-failure
+    ports:
+      - "3000:3000"
+    networks:
+      - connection-api
 
 networks:
+  connection-api:
   conection-db:
 
 volumes:

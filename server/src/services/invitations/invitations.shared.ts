@@ -24,7 +24,7 @@ export const invitationsMethods = [
   'create',
   'patch',
   'remove',
-  'ManagerCancelInvitation'
+  'managerCancelInvitation'
 ] as const
 
 export const invitationsClient = (client: ClientApplication) => {

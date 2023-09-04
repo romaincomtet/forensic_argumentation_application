@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import FClient from "@/app/Api/FeathersClient";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import ConfirmationModal from "../Modal/ModalBoard";
+import ConfirmationModal from "../Modal/ConfirmationModal";
 
 interface IListInvitationMemberProps {
   caseId: number;

@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCog } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import { Boards, Cases } from "forensic-server";
+import { useRouter } from "next/router";
 
 interface IBoardProps {
   boardData: Boards;
@@ -9,8 +10,12 @@ interface IBoardProps {
 }
 
 const Board = ({ boardData, caseInfo }: IBoardProps) => {
+  const router = useRouter();
   return (
-    <div className="relative">
+    <div
+      className="relative cursor-pointer"
+      onClick={() => router.push(`/protect/board/${boardData.id}`)}
+    >
       <Image
         // src={boardData.Preview}
         src={"/caseImage.png"}

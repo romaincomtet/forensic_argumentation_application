@@ -56,7 +56,6 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     // @ts-ignore
     FClient.logout();
     setLogged(false);
-    setUser(null);
   };
 
   const autoLogin = async (alreadyAuthenticate: boolean) => {

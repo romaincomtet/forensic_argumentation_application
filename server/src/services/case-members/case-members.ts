@@ -63,7 +63,7 @@ export const caseMembers = (app: Application) => {
         schemaHooks.resolveData(caseMembersPatchResolver)
       ],
       remove: [disallow('external')],
-      ManagerRemoveMember: [
+      managerRemoveMember: [
         schemaHooks.validateData(managerRemoveMemberValidator),
         schemaHooks.resolveData(managerRemoveMemberResolver)
       ]

@@ -52,7 +52,7 @@ const CasePage = () => {
 
   return (
     <div className="min-w-screen flex min-h-screen flex-col bg-grey-light">
-      <Navbar pageName="Dashboard" />
+      <Navbar pageName="Case Dashboard" />
       {caseInfo?.id && <BoardsList caseInfo={caseInfo!} />}
     </div>
   );

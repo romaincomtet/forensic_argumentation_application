@@ -64,7 +64,7 @@ export const invitations = (app: Application) => {
         schemaHooks.resolveData(invitationsPatchResolver)
       ],
       remove: [disallow('external')],
-      ManagerCancelInvitation: [
+      managerCancelInvitation: [
         authorizeHook,
         schemaHooks.validateData(invitationsCancelValidator),
         schemaHooks.resolveData(invitationsCancelResolver)

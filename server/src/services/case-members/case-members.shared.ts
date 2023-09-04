@@ -18,7 +18,7 @@ export type CaseMembersClientService = Pick<
 
 export const caseMembersPath = 'case-members'
 
-export const caseMembersMethods = ['find', 'get', 'create', 'patch', 'remove', 'ManagerRemoveMember'] as const
+export const caseMembersMethods = ['find', 'get', 'create', 'patch', 'remove', 'managerRemoveMember'] as const
 
 export const caseMembersClient = (client: ClientApplication) => {
   const connection = client.get('connection')

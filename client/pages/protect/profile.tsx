@@ -19,10 +19,10 @@ export default function Profile() {
         <div className="flex w-1/2 flex-col rounded border bg-white p-4 shadow-lg">
           <Formik
             initialValues={{
-              email: user!.email,
+              email: user?.email || "",
               password: "",
-              name: user!.name,
-              isOrganisationUser: user!.isOrganisationUser,
+              name: user?.name || "",
+              isOrganisationUser: user?.isOrganisationUser || false,
             }}
             validationSchema={Yup.object({
               name: Yup.string()

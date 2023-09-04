@@ -24,7 +24,7 @@ export class InvitationsService<ServiceParams extends Params = InvitationsParams
   InvitationsParams,
   InvitationsPatch
 > {
-  async ManagerCancelInvitation(data: InvitationsCancel, params: InvitationsParams): Promise<Invitations> {
+  async managerCancelInvitation(data: InvitationsCancel, params?: InvitationsParams): Promise<Invitations> {
     return super.patch(data.id, { status: 'canceled' })
   }
 }

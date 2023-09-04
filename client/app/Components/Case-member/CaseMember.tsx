@@ -10,7 +10,7 @@ import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import ModalMember from "../Modal/ModalMember";
 import ListInvitationMember from "./ListInvitationMember";
 import ModalMemberEdit from "../Modal/ModalMemberEdit";
-import ConfirmationModal from "../Modal/ModalBoard";
+import ConfirmationModal from "../Modal/ConfirmationModal";
 
 interface IMembersListProps {
   caseInfo: Cases;

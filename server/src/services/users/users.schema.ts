@@ -11,11 +11,15 @@ import { dataValidator, queryValidator } from '../../validators'
 export const userSchema = Type.Object(
   {
     id: Type.Number(),
-    email: Type.String(),
-    password: Type.Optional(Type.String())
+    email: Type.String({ format: 'email' }),
+    password: Type.String(),
+    name: Type.String(),
+    isOrganisationUser: Type.Optional(Type.Boolean({ default: false })),
+    created_at: Type.Optional(Type.String({ format: 'date-time' }))
   },
   { $id: 'User', additionalProperties: false }
 )
+
 export type User = Static<typeof userSchema>
 export const userValidator = getValidator(userSchema, dataValidator)
 export const userResolver = resolve<User, HookContext>({})
@@ -26,7 +30,7 @@ export const userExternalResolver = resolve<User, HookContext>({
 })
 
 // Schema for creating new entries
-export const userDataSchema = Type.Pick(userSchema, ['email', 'password'], {
+export const userDataSchema = Type.Pick(userSchema, ['email', 'password', 'name', 'isOrganisationUser'], {
   $id: 'UserData'
 })
 export type UserData = Static<typeof userDataSchema>
@@ -46,7 +50,7 @@ export const userPatchResolver = resolve<User, HookContext>({
 })
 
 // Schema for allowed query properties
-export const userQueryProperties = Type.Pick(userSchema, ['id', 'email'])
+export const userQueryProperties = Type.Pick(userSchema, ['id', 'email', 'name'])
 export const userQuerySchema = Type.Intersect(
   [
     querySyntax(userQueryProperties),
@@ -57,13 +61,4 @@ export const userQuerySchema = Type.Intersect(
 )
 export type UserQuery = Static<typeof userQuerySchema>
 export const userQueryValidator = getValidator(userQuerySchema, queryValidator)
-export const userQueryResolver = resolve<UserQuery, HookContext>({
-  // If there is a user (e.g. with authentication), they are only allowed to see their own data
-  id: async (value, user, context) => {
-    if (context.params.user) {
-      return context.params.user.id
-    }
-
-    return value
-  }
-})
+export const userQueryResolver = resolve<UserQuery, HookContext>({})

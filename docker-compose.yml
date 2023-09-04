@@ -1,0 +1,50 @@
+version: "3"
+
+services:
+  server:
+    build:
+      context: ./server
+    ports:
+      - "3030:3030"
+    environment:
+      POSTGRES_HOST: "db"
+      DATABASE_URI: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT}/${POSTGRES_DB}"
+
+    depends_on:
+      - db
+    restart: on-failure
+    networks:
+      - conection-db
+      - connection-api
+
+  db:
+    image: postgres:15-alpine
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    expose:
+      - ${POSTGRES_PORT}
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    networks:
+      - conection-db
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    restart: always
+
+  client:
+    build:
+      context: ./client
+    restart: on-failure
+    ports:
+      - "3000:3000"
+    networks:
+      - connection-api
+
+networks:
+  connection-api:
+  conection-db:
+
+volumes:
+  db-data:

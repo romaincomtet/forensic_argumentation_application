@@ -66,11 +66,10 @@ web_modules/
 # Optional REPL history
 .node_repl_history
 
-# Output of 'npm pack'
-*.tgz
 
 # Yarn Integrity file
 .yarn-integrity
+yarn.lock
 
 # dotenv environment variable files
 .env
@@ -127,6 +126,8 @@ dist
 .yarn/unplugged
 .yarn/build-state.yml
 .yarn/install-state.gz
-.pnp.*
+package-lock.json
 
+.pnp.*
+lib/
 

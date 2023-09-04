@@ -3,7 +3,7 @@
   "port": 3030,
   "public": "./public/",
   "origins": [
-    "http://localhost:3030"
+    "http://localhost:3030", "http://localhost:3000"
   ],
   "paginate": {
     "default": 10,
@@ -11,7 +11,7 @@
   },
   "postgresql": {
     "client": "pg",
-    "connection": "postgres://postgres:@localhost:5432/server"
+    "connection": "postgres://postgres:postgres@localhost:5432/postgres"
   },
   "authentication": {
     "entity": "user",

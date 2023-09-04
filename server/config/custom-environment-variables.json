@@ -3,8 +3,11 @@
     "__name": "PORT",
     "__format": "number"
   },
-  "host": "HOSTNAME",
   "authentication": {
     "secret": "FEATHERS_SECRET"
+  },
+  "postgresql": {
+    "client": "pg",
+    "connection": "DATABASE_URI"
   }
 }

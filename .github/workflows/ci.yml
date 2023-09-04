@@ -23,10 +23,12 @@ jobs:
           node-version: "20"
 
       - name: Install dependencies
-        run: cd server && yarn install
+        run: yarn
+        working-directory: ./server
 
       - name: Build
-        run: cd server && yarn run compile
+        run: yarn run compile
+        working-directory: ./server
 
   build-front:
     needs: build-server
@@ -42,10 +44,12 @@ jobs:
           node-version: "20"
 
       - name: Install dependencies
-        run: cd client && yarn install
+        run: yarn
+        working-directory: ./client
 
       - name: Build
-        run: cd client && yarn run build
+        run: yarn run build
+        working-directory: ./client
 
   # test:
   #   needs: build-front

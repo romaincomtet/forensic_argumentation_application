@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Modal from "./Modal";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -57,6 +57,13 @@ const ModalMemberEdit = ({
       }
     },
   });
+
+  useEffect(() => {
+    formik.setFieldValue(
+      "permissionJson",
+      (caseMember?.permissionJson as Record<string, Partial<Permission>>) || {},
+    );
+  }, [caseMember]);
 
   return (
     <Modal

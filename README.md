@@ -2,21 +2,23 @@
 
 ## Introduction
 
-Digital forensics is a rapidly changing field where investigators face numerous challenges due to the rise of digital technology and the consequent data deluge. While the problem is multifaceted, encompassing both technical and organizational concerns, the underlying need remains consistent: a user-friendly tool, specifically web applications, to streamline the investigative process. To fully grasp the magnitude of these challenges, one must appreciate the digital age's implications for forensic investigations.
+Digital forensics is a rapidly changing field where investigators face many challenges. The rise of digital technology has led to a massive increase in data. As investigators sift through this data from various sources, they often feel overwhelmed. This "big data" issue is not just technical; it highlights the need for a clear and organised method for analysing and reporting evidence. There's a clear need for a user-friendly tool, especially web applications, to help in this process.
+To understand the depth of these challenges, it's essential to delve into the backdrop of the digital age and its implications for forensic investigations.
 
 ## Background
 
-The contemporary digital era, characterized by interconnected devices and expansive online platforms, has exponentially expanded the data reservoir available to forensic investigators. As Franqueira and Horsman (2020) articulated, the real challenge transcends sheer data volume to the necessity of presenting these findings coherently. While there's a palpable momentum towards standardizing forensic practices to bolster evidence reliability, the realm of digital forensics stands at a pivotal juncture. The unique nature of digital evidence, compounded by the imperatives of lucid reporting, encapsulates the intrinsic complexity of the field.
+The digital era, with its interconnected devices and online platforms, has made the data pool for forensic investigators much larger. While there are tools for specific data types, it's up to the investigator to piece together a clear story from different evidence. As Franqueira and Horsman (2020) point out, the challenge isn't just about the amount of data but presenting findings in a way that everyone can understand. There's also a growing push for standard practices in forensics to ensure evidence is reliable and clear. However, the digital forensics field is at a crossroads. The nature of digital evidence and the need for clear reporting make for a complicated problem.
+This backdrop sets the stage for the core issue at hand in digital forensics.
 
 ## Problem Statement
 
-At the heart of digital forensics lies the intricate task of organizing, deciphering, and elucidating evidence. The proliferation of investigative elements inevitably muddies the waters of clarity. This convolution has repercussions that ripple across all stakeholders. Enter the proposed panacea: a web-centric tool envisioned to bring method to the madness, ensuring narrative clarity and comprehensive case understanding.
+The main challenge in digital forensics is about organising, interpreting, and presenting evidence. With many elements in an investigation, organising them clearly becomes harder. This complexity affects not just investigators but everyone involved in the process. The solution? A web-based tool that helps structure the investigation, ensuring clarity and a complete understanding of the case.
+Recognizing these challenges, this dissertation proposes a solution tailored to the needs of the digital forensics community.
 
 ## Project Objective
 
-In alignment with the challenges delineated, this dissertation endeavors to architect a user-centric, robust web application that resonates with the framework proposed by Franqueira and Horsman (2020). Envisioned with an intuitive drag-and-drop interface, the application is tailored to satiate the unique demands of digital forensic professionals. A non-negotiable emphasis on rigorous functional and security testing promises an uncompromised user experience. By fostering early engagement with the potential user base, this project aspires to craft a solution that resonates with the digital forensics fraternity's real-world challenges.
-
-By the culmination of this dissertation, readers will be equipped with an in-depth understanding of the digital forensics landscape, the proposed web-based panacea, and its prospective ramifications on the domain.
+This dissertation aims to create a user-friendly, secure web app that supports the framework suggested by Franqueira and Horsman (2020). This app, with its drag-and-drop feature, offers a flexible way to organise evidence, meeting the specific needs of digital forensics professionals. The focus is on thorough testing for both function and security, ensuring a safe user experience. By engaging with potential users early on, this project hopes to design a solution that truly addresses the challenges faced by the digital forensics community.
+By the end of this dissertation, readers will understand the challenges in digital forensics, learn about the proposed web-based solution, and its possible impacts on the field.
 
 ## Getting Started
 
